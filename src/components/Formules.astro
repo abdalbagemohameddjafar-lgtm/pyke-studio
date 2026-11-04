@@ -1,20 +1,67 @@
 ---
 // Les 3 formules de création (Essentiel, Vitrine, Vitrine+).
-import { formules, euros } from '../data/tarifs';
+// survol = true (accueil) : carte courte, le détail s'affiche au passage de la souris
+//   (ou au clavier) ; sur téléphone/tablette tactile, le détail est affiché directement.
+// survol = false (page Tarifs) : carte simple avec la liste courte.
+import { formules, inclusPartout, euros } from '../data/tarifs';
+
+interface Props {
+  survol?: boolean;
+}
+const { survol = false } = Astro.props;
 ---
 
-<div class="formules">
+<div class:list={['formules', { 'avec-survol': survol }]}>
   {
     formules.map((f) => (
-      <article class:list={['formule', { vedette: f.vedette }]}>
-        {f.vedette && <span class="badge">Le plus choisi</span>}
-        <h3>{f.nom}</h3>
-        <p class="prix">{euros(f.prix)}</p>
-        <ul>
-          {f.points.map((p) => (
-            <li>{p}</li>
-          ))}
-        </ul>
+      <article
+        class:list={['formule', { vedette: f.vedette }]}
+        tabindex={survol ? 0 : undefined}
+        aria-label={survol ? `Formule ${f.nom}, ${euros(f.prix)}` : undefined}
+      >
+        <div class="face">
+          {f.vedette && <span class="badge">Le plus choisi</span>}
+          <h3>{f.nom}</h3>
+          <p class="prix">{euros(f.prix)}</p>
+          {survol ? (
+            <>
+              <p class="resume">{f.resume}</p>
+              <p class="indice" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+                Survolez pour voir le détail
+              </p>
+            </>
+          ) : (
+            <ul class="coches">
+              {f.points.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {survol && (
+          <div class="detail">
+            <div class="detail-tete">
+              <h4>{f.nom}</h4>
+              <p>{euros(f.prix)}</p>
+            </div>
+            <p class="ideal">
+              <strong>Idéal pour :</strong> {f.ideal}
+            </p>
+            <ul class="coches">
+              {f.detail.map((p) => (
+                <li>{p}</li>
+              ))}
+              {inclusPartout.map((p) => (
+                <li>{p}</li>
+              ))}
+            </ul>
+            <a href="#contact" class="bouton bouton-plein detail-cta">
+              Choisir {f.nom}
+            </a>
+          </div>
+        )}
       </article>
     ))
   }
@@ -32,12 +79,17 @@ import { formules, euros } from '../data/tarifs';
       grid-template-columns: repeat(3, 1fr);
     }
   }
+
   .formule {
     position: relative;
-    padding: 30px 26px 28px;
     border-radius: var(--rayon);
     background: var(--blanc);
     border: 1px solid var(--bord);
+  }
+  .face {
+    padding: 30px 26px 28px;
+    display: flex;
+    flex-direction: column;
   }
   .formule h3 {
     font-size: 1.4rem;
@@ -50,18 +102,20 @@ import { formules, euros } from '../data/tarifs';
     letter-spacing: -0.03em;
     line-height: 1.1;
   }
-  .formule ul {
+
+  /* Liste à coches */
+  .coches {
     list-style: none;
     margin: 20px 0 0;
     padding: 0;
     display: grid;
     gap: 10px;
   }
-  .formule li {
+  .coches li {
     position: relative;
     padding-left: 28px;
   }
-  .formule li::before {
+  .coches li::before {
     content: '';
     position: absolute;
     left: 0;
@@ -83,7 +137,7 @@ import { formules, euros } from '../data/tarifs';
   .vedette .prix {
     color: var(--turquoise);
   }
-  .vedette li::before {
+  .vedette .coches li::before {
     background-color: rgba(32, 184, 168, 0.22);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235fdccf' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
   }
@@ -99,5 +153,168 @@ import { formules, euros } from '../data/tarifs';
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+  }
+
+  /* ---------- Version avec détail au survol (accueil) ---------- */
+  .resume {
+    margin-top: 14px;
+    font-size: 1.1rem;
+    color: var(--gris);
+  }
+  .vedette .resume {
+    color: var(--gris-clair);
+  }
+  .indice {
+    margin-top: auto;
+    padding-top: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--turquoise-fonce);
+  }
+  .vedette .indice {
+    color: var(--turquoise);
+  }
+
+  .detail {
+    padding: 26px;
+    border-radius: var(--rayon);
+    background: var(--petrole);
+    color: var(--clair);
+  }
+  .detail-tete {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .detail-tete h4 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+  .detail-tete p {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--turquoise);
+    white-space: nowrap;
+  }
+  .ideal {
+    margin-top: 14px;
+    color: var(--gris-clair);
+    font-size: 0.98rem;
+  }
+  .ideal strong {
+    color: var(--blanc);
+  }
+  .detail .coches {
+    margin-top: 16px;
+    gap: 8px;
+    font-size: 0.98rem;
+  }
+  .detail .coches li::before {
+    background-color: rgba(32, 184, 168, 0.22);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235fdccf' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  }
+  .detail-cta {
+    margin-top: 20px;
+    width: 100%;
+  }
+
+  /* Écrans avec souris : le détail recouvre la carte au survol */
+  @media (hover: hover) and (pointer: fine) {
+    .avec-survol .formule {
+      cursor: default;
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+    .avec-survol .face {
+      height: 100%;
+      min-height: 300px;
+    }
+    .avec-survol .detail {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      min-height: calc(100% + 20px);
+      z-index: 5;
+      border: 1px solid var(--turquoise);
+      box-shadow: 0 30px 60px -20px rgba(15, 42, 53, 0.55);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px) scale(0.98);
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        visibility 0s linear 0.22s;
+    }
+    .avec-survol .formule:hover .detail,
+    .avec-survol .formule:focus-within .detail,
+    .avec-survol .formule:focus .detail {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease;
+    }
+    .avec-survol .formule:hover,
+    .avec-survol .formule:focus-within {
+      z-index: 5;
+    }
+    .avec-survol .formule:focus-visible {
+      outline: none;
+    }
+  }
+
+  /* Écrans tactiles (pas de survol) : le détail est affiché sous la carte */
+  @media not ((hover: hover) and (pointer: fine)) {
+    .avec-survol .indice {
+      display: none;
+    }
+    .avec-survol .face {
+      padding-bottom: 12px;
+    }
+    .avec-survol .detail {
+      margin: 0 10px 10px;
+      background: rgba(15, 42, 53, 0.04);
+      color: var(--texte);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .avec-survol .detail-tete {
+      display: none;
+    }
+    .avec-survol .ideal {
+      margin-top: 0;
+      color: var(--gris);
+    }
+    .avec-survol .ideal strong {
+      color: var(--texte);
+    }
+    .avec-survol .detail .coches li::before {
+      background-color: rgba(32, 184, 168, 0.16);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b7a70' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+    }
+    .avec-survol .vedette .detail {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--clair);
+    }
+    .avec-survol .vedette .ideal {
+      color: var(--gris-clair);
+    }
+    .avec-survol .vedette .ideal strong {
+      color: var(--blanc);
+    }
+    .avec-survol .vedette .detail .coches li::before {
+      background-color: rgba(32, 184, 168, 0.22);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235fdccf' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+    }
   }
 </style>
