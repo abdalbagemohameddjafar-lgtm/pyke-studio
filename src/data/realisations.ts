@@ -21,7 +21,7 @@ export const realisations: (Projet | null)[] = [
   {
     titre: 'Maison Ambre',
     sousTitre: 'Parfumerie · Projet de démonstration',
-    lien: 'https://portfolio-maison-ambre.netlify.app',
+    lien: 'https://maison-ambre.pages.dev',
     image: maisonAmbre,
     alt: "Page d'accueil du site Maison Ambre, parfumerie de créateur",
   },

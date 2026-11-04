@@ -9,7 +9,7 @@ export const studio = {
   pseudo: '@pyke.studio',
   instagram: 'https://www.instagram.com/pyke.studio',
   tiktok: 'https://www.tiktok.com/@pyke.studio',
-  url: 'https://pyke-studio.netlify.app',
+  url: 'https://pykestudio.fr',
 
   // Informations légales (obligatoires dans les mentions légales).
   // ⚠️ À compléter avec tes vraies informations avant de démarcher.
@@ -22,8 +22,8 @@ export const studio = {
   },
 
   hebergeur: {
-    nom: 'Netlify, Inc.',
-    adresse: '512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis',
-    site: 'https://www.netlify.com',
+    nom: 'Cloudflare, Inc.',
+    adresse: '101 Townsend Street, San Francisco, CA 94107, États-Unis',
+    site: 'https://www.cloudflare.com',
   },
 };
