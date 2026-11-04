@@ -2,7 +2,7 @@
 
 Site de Pyke Studio — création de sites web pour artisans et commerçants, Metz et alentours.
 
-Fait avec [Astro](https://astro.build), hébergé sur Netlify : https://pyke-studio.netlify.app
+Fait avec [Astro](https://astro.build), hébergé sur Cloudflare Pages : https://pykestudio.fr
 (mise en ligne automatique à chaque envoi sur la branche `main`).
 
 ## Où modifier quoi
