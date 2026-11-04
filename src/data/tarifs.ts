@@ -7,7 +7,7 @@ export type Formule = {
   nom: string;
   prix: number;
   points: string[]; // liste courte (cartes de la page Tarifs)
-  vedette?: boolean; // affiche le badge « Le plus choisi »
+  vedette?: boolean; // affiche le badge « Recommandé »
   resume: string; // phrase d'accroche, visible sans survol
   ideal: string; // « Idéal pour… », visible au survol
   detail: string[]; // tout ce qui est compris, visible au survol

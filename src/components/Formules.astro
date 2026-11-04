@@ -20,7 +20,7 @@ const { survol = false } = Astro.props;
         aria-label={survol ? `Formule ${f.nom}, ${euros(f.prix)}` : undefined}
       >
         <div class="face">
-          {f.vedette && <span class="badge">Le plus choisi</span>}
+          {f.vedette && <span class="badge">Recommandé</span>}
           <h3>{f.nom}</h3>
           <p class="prix">{euros(f.prix)}</p>
           {survol ? (
