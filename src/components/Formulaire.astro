@@ -1,21 +1,24 @@
 ---
-// Formulaire de contact, relié à Netlify Forms.
-// Les messages reçus apparaissent dans Netlify → projet pyke-studio → Forms,
-// et peuvent être envoyés par e-mail (Forms → Form notifications).
+// Formulaire de contact, relié à FormSubmit (formsubmit.co) : les messages
+// arrivent directement par e-mail à l'adresse de studio.email.
+// Le tout premier envoi déclenche un e-mail d'activation à cliquer une seule fois.
 import { formules, boutique } from '../data/tarifs';
+import { studio } from '../data/studio';
 ---
 
 <form
   class="formulaire"
   name="contact"
   method="POST"
-  action="/merci"
-  data-netlify="true"
-  netlify-honeypot="site-web"
+  action={`https://formsubmit.co/${studio.email}`}
+  data-ajax={`https://formsubmit.co/ajax/${studio.email}`}
 >
-  <input type="hidden" name="form-name" value="contact" />
+  <input type="hidden" name="_subject" value="Nouvelle demande depuis pykestudio.fr" />
+  <input type="hidden" name="_next" value={`${studio.url}/merci`} />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
   <p class="piege" aria-hidden="true">
-    <label>Ne pas remplir : <input name="site-web" tabindex="-1" autocomplete="off" /></label>
+    <label>Ne pas remplir : <input name="_honey" tabindex="-1" autocomplete="off" /></label>
   </p>
 
   <div class="ligne">
@@ -77,13 +80,13 @@ import { formules, boutique } from '../data/tarifs';
       statut.className = 'statut';
       statut.textContent = 'Envoi en cours…';
       try {
-        const donnees = new URLSearchParams(new FormData(form) as unknown as Record<string, string>);
-        const rep = await fetch('/', {
+        const rep = await fetch(form.dataset.ajax!, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: donnees.toString(),
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
         });
-        if (!rep.ok) throw new Error(String(rep.status));
+        const json = await rep.json().catch(() => ({}));
+        if (!rep.ok || String(json.success) !== 'true') throw new Error(String(rep.status));
         form.reset();
         statut.classList.add('ok');
         statut.textContent = 'Merci ! Votre message est bien envoyé. Nous vous répondons sous 48 h.';
