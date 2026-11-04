@@ -4,7 +4,7 @@
 export const studio = {
   nom: 'Pyke Studio',
   slogan: 'Sites web pour artisans et commerçants',
-  zone: 'Metz et alentours',
+  zone: 'Partout en France, à distance',
   email: 'pykestudio.contact@gmail.com',
   pseudo: '@pyke.studio',
   instagram: 'https://www.instagram.com/pyke.studio',
@@ -17,7 +17,7 @@ export const studio = {
     responsable: '[Prénom NOM à compléter]',
     statut: 'Micro-entreprise (entrepreneur individuel)',
     siret: '[SIRET à compléter]',
-    adresse: '[Adresse à compléter], Metz',
+    adresse: '[Adresse à compléter]',
     tva: 'TVA non applicable, art. 293 B du CGI',
   },
 

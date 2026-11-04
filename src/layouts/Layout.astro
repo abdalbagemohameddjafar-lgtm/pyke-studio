@@ -13,8 +13,8 @@ interface Props {
 }
 
 const {
-  titre = 'Pyke Studio · Création de sites web à Metz',
-  description = 'Pyke Studio crée des sites web modernes pour les artisans et commerçants de Metz et alentours : fleuristes, tatoueurs, restaurants, boutiques. À partir de 390 €.',
+  titre = 'Pyke Studio · Création de sites web pour commerçants',
+  description = 'Pyke Studio crée des sites web modernes pour les artisans et commerçants : fleuristes, tatoueurs, restaurants, boutiques. À partir de 390 €.',
 } = Astro.props;
 
 const canonique = new URL(Astro.url.pathname, Astro.site);
@@ -34,8 +34,7 @@ const jsonLd = {
   description,
   url: studio.url,
   email: studio.email,
-  areaServed: 'Metz et alentours',
-  address: { '@type': 'PostalAddress', addressLocality: 'Metz', addressCountry: 'FR' },
+  areaServed: { '@type': 'Country', name: 'France' },
   sameAs: [studio.instagram, studio.tiktok],
   priceRange: '390 € – 1 500 €+',
 };
