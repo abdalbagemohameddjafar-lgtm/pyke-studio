@@ -1,0 +1,198 @@
+---
+// Formulaire de contact, relié à Netlify Forms.
+// Les messages reçus apparaissent dans Netlify → projet pyke-studio → Forms,
+// et peuvent être envoyés par e-mail (Forms → Form notifications).
+import { formules, boutique } from '../data/tarifs';
+---
+
+<form
+  class="formulaire"
+  name="contact"
+  method="POST"
+  action="/merci"
+  data-netlify="true"
+  netlify-honeypot="site-web"
+>
+  <input type="hidden" name="form-name" value="contact" />
+  <p class="piege" aria-hidden="true">
+    <label>Ne pas remplir : <input name="site-web" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="ligne">
+    <div class="champ">
+      <label for="nom">Votre nom <span aria-hidden="true">*</span></label>
+      <input id="nom" name="nom" type="text" autocomplete="name" required />
+    </div>
+    <div class="champ">
+      <label for="commerce">Votre commerce</label>
+      <input id="commerce" name="commerce" type="text" autocomplete="organization" placeholder="Ex. : fleuriste, salon de tatouage…" />
+    </div>
+  </div>
+
+  <div class="ligne">
+    <div class="champ">
+      <label for="email">E-mail <span aria-hidden="true">*</span></label>
+      <input id="email" name="email" type="email" autocomplete="email" required />
+    </div>
+    <div class="champ">
+      <label for="telephone">Téléphone</label>
+      <input id="telephone" name="telephone" type="tel" autocomplete="tel" />
+    </div>
+  </div>
+
+  <div class="champ">
+    <label for="formule">Formule qui vous intéresse</label>
+    <select id="formule" name="formule">
+      <option value="Je ne sais pas encore">Je ne sais pas encore</option>
+      {formules.map((f) => <option value={f.nom}>{f.nom}</option>)}
+      <option value={boutique.nom}>{boutique.nom}</option>
+    </select>
+  </div>
+
+  <div class="champ">
+    <label for="message">Votre projet <span aria-hidden="true">*</span></label>
+    <textarea id="message" name="message" rows="5" required placeholder="Parlez-nous de votre commerce et de ce que vous attendez de votre site."></textarea>
+  </div>
+
+  <p class="mention">
+    Les champs marqués * sont obligatoires. Vos informations servent uniquement à vous répondre
+    (voir les <a href="/mentions-legales#donnees">mentions légales</a>).
+  </p>
+
+  <button class="bouton bouton-plein" type="submit">Envoyer ma demande</button>
+  <p class="statut" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  // Envoi sans quitter la page (si JavaScript est désactivé, le formulaire
+  // fonctionne quand même et redirige vers /merci).
+  const form = document.querySelector<HTMLFormElement>('form.formulaire');
+  if (form) {
+    const statut = form.querySelector<HTMLElement>('.statut')!;
+    const bouton = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      bouton.disabled = true;
+      statut.className = 'statut';
+      statut.textContent = 'Envoi en cours…';
+      try {
+        const donnees = new URLSearchParams(new FormData(form) as unknown as Record<string, string>);
+        const rep = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: donnees.toString(),
+        });
+        if (!rep.ok) throw new Error(String(rep.status));
+        form.reset();
+        statut.classList.add('ok');
+        statut.textContent = 'Merci ! Votre message est bien envoyé. Nous vous répondons sous 48 h.';
+      } catch {
+        statut.classList.add('erreur');
+        statut.textContent =
+          "Oups, l'envoi n'a pas fonctionné. Réessayez, ou écrivez-nous directement à pykestudio.contact@gmail.com.";
+      } finally {
+        bouton.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .formulaire {
+    display: grid;
+    gap: 18px;
+    padding: clamp(22px, 4vw, 36px);
+    background: var(--blanc);
+    color: var(--texte);
+    border-radius: var(--rayon);
+    box-shadow: var(--ombre);
+  }
+  .ligne {
+    display: grid;
+    gap: 18px;
+  }
+  @media (min-width: 620px) {
+    .ligne {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .champ {
+    display: grid;
+    gap: 6px;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  label span {
+    color: var(--turquoise-fonce);
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--texte);
+    padding: 12px 14px;
+    min-height: 48px;
+    border: 1.5px solid var(--bord);
+    border-radius: var(--rayon-petit);
+    background: var(--fond);
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+  textarea {
+    resize: vertical;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--turquoise);
+    background: var(--blanc);
+    box-shadow: 0 0 0 3px rgba(32, 184, 168, 0.2);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: #7d8f96;
+  }
+  .mention {
+    font-size: 0.875rem;
+    color: var(--gris);
+  }
+  .mention a {
+    color: var(--turquoise-fonce);
+  }
+  button {
+    justify-self: start;
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+  }
+  .statut:empty {
+    display: none;
+  }
+  .statut {
+    padding: 12px 14px;
+    border-radius: var(--rayon-petit);
+    background: var(--fond);
+    font-weight: 500;
+  }
+  .statut.ok {
+    background: #e2f6f3;
+    color: #075b53;
+  }
+  .statut.erreur {
+    background: #fde8e6;
+    color: #8a1f12;
+  }
+  .piege {
+    position: absolute;
+    left: -9999px;
+  }
+</style>

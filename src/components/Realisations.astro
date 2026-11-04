@@ -1,0 +1,160 @@
+---
+// Grille des réalisations : 2 cartes par ligne (1 sur mobile).
+// Les données sont dans src/data/realisations.ts.
+import { Image } from 'astro:assets';
+import { realisations } from '../data/realisations';
+---
+
+<ul class="grille-real" role="list">
+  {
+    realisations.map((projet) =>
+      projet ? (
+        <li>
+          <a class="carte-real carte-projet" href={projet.lien} target="_blank" rel="noopener">
+            <div class="carte-visuel">
+              <Image
+                src={projet.image}
+                alt={projet.alt}
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 760px) 540px, 100vw"
+                loading="lazy"
+              />
+            </div>
+            <div class="carte-texte">
+              <h3>{projet.titre}</h3>
+              <p>{projet.sousTitre}</p>
+              <span class="carte-voir" aria-hidden="true">
+                Voir le site
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
+              </span>
+              <span class="visually-hidden">(s'ouvre dans un nouvel onglet)</span>
+            </div>
+          </a>
+        </li>
+      ) : (
+        <li>
+          <div class="carte-real carte-avenir">
+            <p>À venir</p>
+          </div>
+        </li>
+      ),
+    )
+  }
+</ul>
+
+<style>
+  .grille-real {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  @media (min-width: 760px) {
+    .grille-real {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+  }
+  .grille-real li {
+    display: flex;
+  }
+
+  .carte-real {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--rayon);
+    overflow: hidden;
+    min-height: 100%;
+  }
+
+  /* Carte d'un vrai projet : entièrement cliquable */
+  .carte-projet {
+    background: var(--blanc);
+    border: 1px solid var(--bord);
+    text-decoration: none;
+    color: var(--texte);
+    box-shadow: 0 1px 0 rgba(15, 42, 53, 0.04);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .carte-visuel {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--clair);
+    border-bottom: 1px solid var(--bord);
+  }
+  .carte-visuel :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    transition: transform 0.5s ease;
+  }
+  .carte-texte {
+    padding: 20px 22px 22px;
+    display: grid;
+    gap: 2px;
+  }
+  .carte-texte h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+  .carte-texte p {
+    color: var(--gris);
+  }
+  .carte-voir {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--turquoise-fonce);
+  }
+  .carte-voir svg {
+    transition: transform 0.25s ease;
+  }
+  .carte-projet:hover,
+  .carte-projet:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: var(--ombre);
+    border-color: var(--turquoise);
+  }
+  .carte-projet:hover .carte-visuel :global(img) {
+    transform: scale(1.03);
+  }
+  .carte-projet:hover .carte-voir svg {
+    transform: translate(3px, -3px);
+  }
+
+  /* Carte « À venir » : même taille, fond uni, pas cliquable */
+  .carte-avenir {
+    align-items: center;
+    justify-content: center;
+    min-height: 260px;
+    background:
+      radial-gradient(circle at 80% 15%, rgba(32, 184, 168, 0.18), transparent 50%),
+      var(--petrole);
+    border: 1px solid var(--petrole);
+  }
+  .carte-avenir p {
+    color: var(--clair);
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

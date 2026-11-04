@@ -1,0 +1,103 @@
+---
+// Les 3 formules de création (Essentiel, Vitrine, Vitrine+).
+import { formules, euros } from '../data/tarifs';
+---
+
+<div class="formules">
+  {
+    formules.map((f) => (
+      <article class:list={['formule', { vedette: f.vedette }]}>
+        {f.vedette && <span class="badge">Le plus choisi</span>}
+        <h3>{f.nom}</h3>
+        <p class="prix">{euros(f.prix)}</p>
+        <ul>
+          {f.points.map((p) => (
+            <li>{p}</li>
+          ))}
+        </ul>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .formules {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  @media (min-width: 860px) {
+    .formules {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .formule {
+    position: relative;
+    padding: 30px 26px 28px;
+    border-radius: var(--rayon);
+    background: var(--blanc);
+    border: 1px solid var(--bord);
+  }
+  .formule h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+  }
+  .prix {
+    margin-top: 6px;
+    font-size: clamp(2.4rem, 5vw, 2.9rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .formule ul {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .formule li {
+    position: relative;
+    padding-left: 28px;
+  }
+  .formule li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(32, 184, 168, 0.16)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b7a70' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+      center / 12px no-repeat;
+  }
+
+  .vedette {
+    background: var(--petrole);
+    border-color: var(--petrole);
+    color: var(--clair);
+    box-shadow: var(--ombre);
+  }
+  .vedette .prix {
+    color: var(--turquoise);
+  }
+  .vedette li::before {
+    background-color: rgba(32, 184, 168, 0.22);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235fdccf' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  }
+  .badge {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--turquoise);
+    color: var(--petrole);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+</style>

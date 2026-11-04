@@ -1,0 +1,66 @@
+---
+import PageSimple from '../layouts/PageSimple.astro';
+import { studio } from '../data/studio';
+const { legal, hebergeur } = studio;
+---
+
+<PageSimple
+  titre="Mentions légales · Pyke Studio"
+  h1="Mentions légales"
+  description="Mentions légales et politique de confidentialité du site Pyke Studio."
+>
+  <h2>Éditeur du site</h2>
+  <p>
+    <strong>{studio.nom}</strong><br />
+    {legal.responsable}, {legal.statut}<br />
+    SIRET : {legal.siret}<br />
+    Adresse : {legal.adresse}<br />
+    E-mail : <a href={`mailto:${studio.email}`}>{studio.email}</a><br />
+    {legal.tva}
+  </p>
+  <p>Directeur de la publication : {legal.responsable}.</p>
+
+  <h2>Hébergement</h2>
+  <p>
+    {hebergeur.nom}<br />
+    {hebergeur.adresse}<br />
+    <a href={hebergeur.site} target="_blank" rel="noopener">{hebergeur.site}</a>
+  </p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    L’ensemble du contenu de ce site (textes, logo, mise en page) appartient à {studio.nom}, sauf
+    mention contraire. Toute reproduction sans autorisation est interdite. Les sites présentés
+    dans la section « Réalisations » marqués « Projet de démonstration » concernent des commerces
+    fictifs.
+  </p>
+
+  <h2 id="donnees">Données personnelles</h2>
+  <p>
+    Quand vous utilisez le formulaire de contact, nous recevons votre nom, votre e-mail et, si vous
+    les indiquez, votre téléphone, le nom de votre commerce et votre message. Ces informations
+    servent uniquement à répondre à votre demande et à établir un devis.
+  </p>
+  <ul>
+    <li><strong>Responsable :</strong> {legal.responsable} ({studio.nom}).</li>
+    <li><strong>Base légale :</strong> votre demande de contact (mesures précontractuelles).</li>
+    <li>
+      <strong>Durée de conservation :</strong> 3 ans après notre dernier échange, puis suppression.
+    </li>
+    <li>
+      <strong>Destinataires :</strong> uniquement {studio.nom}. Les messages transitent par
+      l’hébergeur Netlify. Vos données ne sont jamais vendues ni cédées.
+    </li>
+  </ul>
+  <p>
+    Vous pouvez demander à consulter, corriger ou supprimer vos données à tout moment en écrivant à{" "}
+    <a href={`mailto:${studio.email}`}>{studio.email}</a>. Vous pouvez aussi adresser une réclamation à{" "}
+    la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).
+  </p>
+
+  <h2>Cookies</h2>
+  <p>
+    Ce site n’utilise aucun cookie publicitaire ni outil de mesure d’audience. Aucun bandeau de
+    consentement n’est donc nécessaire.
+  </p>
+</PageSimple>

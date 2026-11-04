@@ -1,0 +1,55 @@
+---
+// Logo V4 de Pyke Studio (le « P » avec la virgule turquoise) + le nom.
+interface Props {
+  avecNom?: boolean;
+  taille?: number;
+}
+const { avecNom = true, taille = 36 } = Astro.props;
+---
+
+<span class="logo">
+  <svg
+    class="logo-p"
+    width={taille}
+    height={taille}
+    viewBox="250 220 580 580"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M287 246H640C718 246 770 300 768 382C765 482 676 557 572 557H472L447 697L336 767L410 332ZM512 332H610C648 332 670 358 665 395C658 436 624 470 585 470H488Z"
+    ></path>
+    <path fill="var(--turquoise)" d="M481 584H570C680 584 772 527 798 443C792 562 690 653 552 653H483Z"></path>
+  </svg>
+  {
+    avecNom && (
+      <span class="logo-nom">
+        pyke <span>studio</span>
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .logo-p {
+    flex-shrink: 0;
+  }
+  .logo-nom {
+    font-weight: 800;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .logo-nom span {
+    font-weight: 500;
+    color: var(--turquoise);
+    letter-spacing: 0;
+  }
+</style>

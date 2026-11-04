@@ -1,0 +1,149 @@
+---
+import '@fontsource/outfit/400.css';
+import '@fontsource/outfit/500.css';
+import '@fontsource/outfit/600.css';
+import '@fontsource/outfit/800.css';
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+import { studio } from '../data/studio';
+
+interface Props {
+  titre?: string;
+  description?: string;
+}
+
+const {
+  titre = 'Pyke Studio · Création de sites web à Metz',
+  description = 'Pyke Studio crée des sites web modernes pour les artisans et commerçants de Metz et alentours : fleuristes, tatoueurs, restaurants, boutiques. À partir de 390 €.',
+} = Astro.props;
+
+const canonique = new URL(Astro.url.pathname, Astro.site);
+const annee = new Date().getFullYear();
+
+const liens = [
+  { href: '/#offres', texte: 'Offres' },
+  { href: '/#realisations', texte: 'Réalisations' },
+  { href: '/#methode', texte: 'Méthode' },
+  { href: '/tarifs', texte: 'Tarifs détaillés' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: studio.nom,
+  description,
+  url: studio.url,
+  email: studio.email,
+  areaServed: 'Metz et alentours',
+  address: { '@type': 'PostalAddress', addressLocality: 'Metz', addressCountry: 'FR' },
+  sameAs: [studio.instagram, studio.tiktok],
+  priceRange: '390 € – 1 500 €+',
+};
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo-pyke-studio.png" />
+    <meta name="theme-color" content="#0f2a35" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={titre} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:image" content={new URL('/logo-pyke-studio.png', Astro.site)} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="passer" href="#contenu">Aller au contenu</a>
+
+    <header class="entete">
+      <div class="conteneur entete-in">
+        <a href="/" class="entete-logo" aria-label="Pyke Studio, accueil">
+          <Logo />
+        </a>
+
+        <button
+          class="burger"
+          type="button"
+          aria-expanded="false"
+          aria-controls="menu"
+          aria-label="Ouvrir le menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <nav id="menu" class="menu" aria-label="Menu principal">
+          <ul>
+            {liens.map((l) => <li><a href={l.href}>{l.texte}</a></li>)}
+          </ul>
+          <a href="/#contact" class="bouton bouton-plein">Demander un devis</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenu">
+      <slot />
+    </main>
+
+    <footer class="pied">
+      <div class="conteneur pied-in">
+        <div class="pied-marque">
+          <Logo />
+          <p>{studio.slogan}.<br />{studio.zone}.</p>
+        </div>
+        <div>
+          <h2 class="pied-titre">Contact</h2>
+          <ul>
+            <li><a href={`mailto:${studio.email}`}>{studio.email}</a></li>
+            <li><a href={studio.instagram} target="_blank" rel="noopener">Instagram {studio.pseudo}</a></li>
+            <li><a href={studio.tiktok} target="_blank" rel="noopener">TikTok {studio.pseudo}</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="pied-titre">Le studio</h2>
+          <ul>
+            {liens.map((l) => <li><a href={l.href}>{l.texte}</a></li>)}
+            <li><a href="/mentions-legales">Mentions légales</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="conteneur pied-bas">
+        <p>© {annee} {studio.nom} · Micro-entreprise · {studio.legal.tva}</p>
+      </div>
+    </footer>
+
+    <script>
+      // Menu mobile : ouverture/fermeture, touche Échap, blocage du défilement derrière.
+      const bouton = document.querySelector<HTMLButtonElement>('.burger')!;
+      const menu = document.getElementById('menu')!;
+
+      function basculer(ouvrir: boolean) {
+        bouton.setAttribute('aria-expanded', String(ouvrir));
+        bouton.setAttribute('aria-label', ouvrir ? 'Fermer le menu' : 'Ouvrir le menu');
+        menu.classList.toggle('ouvert', ouvrir);
+        document.documentElement.classList.toggle('menu-ouvert', ouvrir);
+      }
+
+      bouton.addEventListener('click', () => basculer(bouton.getAttribute('aria-expanded') !== 'true'));
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menu.classList.contains('ouvert')) {
+          basculer(false);
+          bouton.focus();
+        }
+      });
+
+      menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => basculer(false)));
+
+      // Si on agrandit la fenêtre menu ouvert, on referme proprement.
+      matchMedia('(min-width: 900px)').addEventListener('change', (e) => e.matches && basculer(false));
+    </script>
+  </body>
+</html>
