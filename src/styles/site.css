@@ -1246,3 +1246,325 @@ h3 {
 .tarifs-supplement {
   margin-top: 14px;
 }
+
+/* =====================================================================
+   Motifs « imprimerie » — petites touches décoratives dans le fond, pour affirmer
+   le côté magazine imprimé : grain de papier, repères de coupe, trames de points,
+   mires de repérage, astérisque et nuancier. Purement décoratif (aria-hidden),
+   jamais cliquable, placé derrière le contenu.
+   ===================================================================== */
+
+/* Grain de papier très léger sur toute la page */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0 0.06 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  opacity: 0.06;
+}
+
+.hero,
+.section {
+  position: relative;
+}
+.deco {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Repères de coupe : une petite croix là où chaque filet de section croise les bords de la grille */
+.section::before,
+.section::after {
+  content: '';
+  position: absolute;
+  top: -7px;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--encre), var(--encre)) center / 1px 100% no-repeat,
+    linear-gradient(var(--encre), var(--encre)) center / 100% 1px no-repeat;
+  opacity: 0.55;
+}
+.section::before {
+  left: calc(max(0px, (100% - 1440px) / 2) + var(--marge) - 6px);
+}
+.section::after {
+  right: calc(max(0px, (100% - 1440px) / 2) + var(--marge) - 6px);
+}
+
+/* Trame de points (comme une photo imprimée en demi-teinte), qui s'efface vers l'intérieur */
+.deco--trame {
+  width: clamp(160px, 22vw, 340px);
+  aspect-ratio: 1;
+  background-image: radial-gradient(circle, var(--encre) 1.1px, transparent 1.5px);
+  background-size: 9px 9px;
+  opacity: 0.16;
+  -webkit-mask-image: radial-gradient(circle at var(--centre, 100% 0%), #000 0%, transparent 70%);
+  mask-image: radial-gradient(circle at var(--centre, 100% 0%), #000 0%, transparent 70%);
+}
+.deco--trame-accent {
+  background-image: radial-gradient(circle, var(--accent) 1.2px, transparent 1.6px);
+  opacity: 0.22;
+}
+.deco--haut-droite {
+  top: var(--nav);
+  right: 0;
+  --centre: 100% 0%;
+}
+.deco--bas-gauche {
+  /* bande basse, dans la marge sous le contenu de la section */
+  bottom: 0;
+  left: 0;
+  width: clamp(200px, 30vw, 440px);
+  aspect-ratio: 3 / 1;
+  --centre: 0% 100%;
+}
+.deco--milieu-droite {
+  top: 30%;
+  right: 0;
+  --centre: 100% 50%;
+}
+
+/* Mire de repérage (cercle + croix), comme dans les marges d'une épreuve d'imprimerie */
+.deco--mire {
+  width: 34px;
+  height: 34px;
+  opacity: 0.5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34' fill='none' stroke='%23141414' stroke-width='1'%3E%3Ccircle cx='17' cy='17' r='9'/%3E%3Ccircle cx='17' cy='17' r='4' fill='%23141414'/%3E%3Cpath d='M17 0v34M0 17h34'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+.deco--mire-bas-droite {
+  bottom: clamp(32px, 4vw, 56px);
+  right: calc(max(0px, (100% - 1440px) / 2) + var(--marge) + 8px);
+}
+.deco--mire-gauche {
+  bottom: clamp(32px, 4vw, 56px);
+  left: calc(max(0px, (100% - 1440px) / 2) + var(--marge) + 8px);
+}
+
+/* Astérisque brique qui tourne très lentement dans le haut de page */
+.deco--etoile {
+  /* dans le vide à droite de la 2e ligne du grand titre, loin des textes */
+  top: calc(var(--nav) + clamp(240px, 26vw, 400px));
+  right: calc(max(0px, (100% - 1440px) / 2) + var(--marge) + clamp(16px, 8vw, 140px));
+  font-size: clamp(40px, 6vw, 88px);
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.85;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .deco--etoile {
+    animation: etoile-tourne 40s linear infinite;
+  }
+}
+@keyframes etoile-tourne {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Nuancier (bande de contrôle des couleurs) dans le coin de la section devis */
+.deco--nuancier {
+  top: clamp(32px, 4vw, 56px);
+  right: calc(max(0px, (100% - 1440px) / 2) + var(--marge) + 8px);
+  display: flex;
+  gap: 2px;
+  opacity: 0.8;
+}
+.deco--nuancier i {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--encre);
+}
+.deco--nuancier i:nth-child(1) {
+  background: var(--encre);
+}
+.deco--nuancier i:nth-child(2) {
+  background: var(--encre-2);
+}
+.deco--nuancier i:nth-child(3) {
+  background: var(--accent);
+}
+.deco--nuancier i:nth-child(4) {
+  background: var(--papier);
+}
+
+@media (max-width: 599px) {
+  .deco--mire,
+  .deco--nuancier {
+    display: none;
+  }
+  .deco--trame {
+    width: 140px;
+  }
+  .deco--etoile {
+    display: none;
+  }
+}
+
+
+/* =====================================================================
+   Magazine, 2e couche : numéro d'édition, folios géants, tampon rond,
+   et petits objets animés. Toutes les animations :
+   - n'utilisent que transform / opacity (fluides, sans recalcul de mise en page) ;
+   - sont coupées si l'utilisateur demande moins d'animations ;
+   - celles liées au défilement n'existent que dans les navigateurs qui les gèrent
+     (ailleurs, les objets restent simplement immobiles).
+   ===================================================================== */
+
+/* Numéro d'édition au centre de la ligne du haut, comme en couverture */
+.hero__edition {
+  color: var(--encre-2);
+}
+.edition-mois {
+  text-transform: capitalize;
+}
+@media (max-width: 767px) {
+  .hero__edition {
+    display: none;
+  }
+}
+
+/* Folio : grand numéro de section en creux (contour seul), en haut à droite */
+.deco--folio {
+  top: clamp(20px, 3vw, 48px);
+  right: calc(max(0px, (100% - 1440px) / 2) + var(--marge) - 0.04em);
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(88px, 15vw, 230px);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(20 20 20 / 0.2);
+  font-variant-numeric: lining-nums;
+}
+
+/* Section devis : le formulaire occupe le haut à droite, le folio passe en bas */
+.deco--folio-bas {
+  top: auto;
+  bottom: clamp(8px, 1.5vw, 20px);
+  font-size: clamp(72px, 9vw, 140px);
+  animation: none !important; /* pas de glissement : il resterait sous le texte du formulaire */
+}
+
+/* Tampon rond (texte circulaire) dans le vide en bas du haut de page */
+.deco--tampon {
+  bottom: clamp(32px, 6vw, 88px);
+  left: calc(max(0px, (100% - 1440px) / 2) + var(--marge));
+  width: clamp(92px, 9vw, 132px);
+  aspect-ratio: 1;
+  color: var(--encre);
+}
+.deco--tampon svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.deco--tampon text {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  fill: currentColor;
+}
+.deco--tampon circle {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+}
+.deco--tampon .tampon__centre {
+  font-family: var(--serif);
+  font-size: 19px;
+  fill: var(--accent);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.tampon__texte {
+  transform-origin: 60px 60px;
+}
+@media (max-width: 599px) {
+  .deco--tampon {
+    left: auto;
+    right: var(--marge);
+    width: 84px;
+  }
+}
+
+/* --- Animations en continu (très lentes, purement décoratives) --- */
+@media (prefers-reduced-motion: no-preference) {
+  .tampon__texte {
+    animation: tampon-tourne 28s linear infinite;
+  }
+}
+@keyframes tampon-tourne {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* --- Animations liées au défilement --- */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* Les folios glissent un peu moins vite que la page (effet de profondeur) */
+    .deco--folio {
+      animation: folio-glisse linear both;
+      animation-timeline: view();
+    }
+    /* Les trames de points dérivent doucement */
+    .deco--trame {
+      animation: trame-derive linear both;
+      animation-timeline: view();
+    }
+    /* Les mires tournent d'un quart de tour pendant qu'elles traversent l'écran */
+    .deco--mire {
+      animation: mire-tourne linear both;
+      animation-timeline: view();
+    }
+    /* Les pastilles du nuancier « s'impriment » l'une après l'autre en arrivant */
+    .deco--nuancier i {
+      animation: nuance-imprime linear both;
+      animation-timeline: view();
+    }
+    .deco--nuancier i:nth-child(1) { animation-range: entry 10% entry 45%; }
+    .deco--nuancier i:nth-child(2) { animation-range: entry 20% entry 55%; }
+    .deco--nuancier i:nth-child(3) { animation-range: entry 30% entry 65%; }
+    .deco--nuancier i:nth-child(4) { animation-range: entry 40% entry 75%; }
+  }
+}
+@keyframes folio-glisse {
+  from {
+    transform: translateY(40%);
+  }
+  to {
+    transform: translateY(-40%);
+  }
+}
+@keyframes trame-derive {
+  from {
+    transform: translate(16px, 24px);
+  }
+  to {
+    transform: translate(-16px, -24px);
+  }
+}
+@keyframes mire-tourne {
+  from {
+    transform: rotate(-45deg);
+  }
+  to {
+    transform: rotate(45deg);
+  }
+}
+@keyframes nuance-imprime {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

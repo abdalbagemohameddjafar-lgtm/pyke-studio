@@ -46,14 +46,30 @@ const estPlaceholder = (t: string) => t.startsWith('[');
 // Exemple affiché par défaut sous les formules : celui de la formule « Recommandé »
 const formuleDefaut = formules.find((f) => f.vedette) ?? formules[0];
 const rangDefaut = formules.indexOf(formuleDefaut);
+// Numéro « d'édition », façon couverture de magazine : mois et année du dernier build
+const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
 ---
 
 <Layout accueil>
   <!-- 00 · ACCUEIL -->
   <section class="hero" id="top" aria-labelledby="hero-h">
+    <span class="deco deco--trame deco--haut-droite" aria-hidden="true"></span>
+    <span class="deco deco--etoile" aria-hidden="true">✳</span>
+    <!-- Tampon rond qui tourne lentement, comme un cachet d'imprimeur -->
+    <span class="deco deco--tampon" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <defs><path id="tampon-cercle" d="M60 60m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0" /></defs>
+        <g class="tampon__texte">
+          <text><textPath href="#tampon-cercle" textLength="292" lengthAdjust="spacing">SITES FAITS MAIN · PARTOUT EN FRANCE · </textPath></text>
+        </g>
+        <circle cx="60" cy="60" r="33" />
+        <text class="tampon__centre" x="60" y="60">N°01</text>
+      </svg>
+    </span>
     <div class="wrap">
       <div class="hero__haut">
         <p class="label">Studio web · Partout en France</p>
+        <p class="label hero__edition">N° 01 — <span class="edition-mois">{edition}</span></p>
         {offreLancement && <p class="label accent">{offreLancement}</p>}
       </div>
       <div class="grille">
@@ -71,6 +87,8 @@ const rangDefaut = formules.indexOf(formuleDefaut);
 
   <!-- 01 · MÉTIERS -->
   <section class="section" id="metiers" aria-labelledby="metiers-h">
+    <span class="deco deco--folio" aria-hidden="true">01</span>
+    <span class="deco deco--mire deco--mire-bas-droite" aria-hidden="true"></span>
     <div class="wrap">
       <div class="section__tete">
         <p class="section__num label">01 — Métiers</p>
@@ -92,6 +110,7 @@ const rangDefaut = formules.indexOf(formuleDefaut);
 
   <!-- 02 · RÉALISATIONS : liste des démos (données : src/data/demos.ts) -->
   <section class="section realisations" id="realisations" aria-labelledby="realisations-h">
+    <span class="deco deco--folio" aria-hidden="true">02</span>
     <div class="wrap">
       <p class="section__num label">02 — Réalisations</p>
       <h2 id="realisations-h" class="label realisations__surtitre">Nos sites de démonstration</h2>
@@ -106,6 +125,8 @@ const rangDefaut = formules.indexOf(formuleDefaut);
 
   <!-- 03 · MÉTHODE -->
   <section class="section" id="methode" aria-labelledby="methode-h">
+    <span class="deco deco--folio" aria-hidden="true">03</span>
+    <span class="deco deco--trame deco--trame-accent deco--bas-gauche" aria-hidden="true"></span>
     <div class="wrap">
       <div class="section__tete">
         <p class="section__num label">03 — Méthode</p>
@@ -126,6 +147,7 @@ const rangDefaut = formules.indexOf(formuleDefaut);
 
   <!-- 04 · FORMULES -->
   <section class="section section--formules" id="formules" aria-labelledby="formules-h">
+    <span class="deco deco--folio" aria-hidden="true">04</span>
     <div class="wrap">
       <div class="section__tete">
         <p class="section__num label">04 — Formules</p>
@@ -185,6 +207,8 @@ const rangDefaut = formules.indexOf(formuleDefaut);
 
   <!-- 05 · QUESTIONS -->
   <section class="section" id="questions" aria-labelledby="questions-h">
+    <span class="deco deco--folio" aria-hidden="true">05</span>
+    <span class="deco deco--trame deco--milieu-droite" aria-hidden="true"></span>
     <div class="wrap">
       <div class="section__tete">
         <p class="section__num label">05 — Questions</p>
@@ -206,6 +230,7 @@ const rangDefaut = formules.indexOf(formuleDefaut);
 
   <!-- 06 · QUI EST DERRIÈRE (contenus à fournir : src/data/studio.ts → fondateur) -->
   <section class="section" id="apropos" aria-labelledby="apropos-h">
+    <span class="deco deco--folio" aria-hidden="true">06</span>
     <div class="wrap">
       <div class="grille apropos">
         <div class="apropos__photo">
@@ -230,6 +255,9 @@ const rangDefaut = formules.indexOf(formuleDefaut);
 
   <!-- 07 · DEVIS -->
   <section class="section" id="devis" aria-labelledby="devis-h">
+    <span class="deco deco--folio deco--folio-bas" aria-hidden="true">07</span>
+    <span class="deco deco--mire deco--mire-gauche" aria-hidden="true"></span>
+    <span class="deco deco--nuancier" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     <div class="wrap">
       <div class="grille">
         <div class="devis-texte">
