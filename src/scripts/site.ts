@@ -139,6 +139,7 @@ function afficherExemple(slug: string, animer = true) {
   cartes.forEach((c) => c.toggleAttribute('data-choisie', c.dataset.formuleCarte === slug));
   blocExemple.style.setProperty('--ordre-mobile', String(rang * 2 + 1));
   blocExemple.replaceChildren(modele.content.cloneNode(true));
+  blocExemple.hidden = false;
   if (animer && !calme) {
     blocExemple.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], {
       duration: 320,
@@ -147,7 +148,20 @@ function afficherExemple(slug: string, animer = true) {
   }
 }
 
-boutonsExemple.forEach((b) => b.addEventListener('click', () => afficherExemple(b.dataset.exempleChoix ?? '')));
+/** Ferme l'exemple : plus aucun bouton « Voir l'exemple » enfoncé. */
+function fermerExemple() {
+  if (!blocExemple) return;
+  boutonsExemple.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+  blocExemple.hidden = true;
+}
+
+// « Voir l'exemple » fonctionne comme un interrupteur : 2e clic sur le même bouton = fermer
+boutonsExemple.forEach((b) =>
+  b.addEventListener('click', () => {
+    if (b.getAttribute('aria-pressed') === 'true' && !blocExemple?.hidden) fermerExemple();
+    else afficherExemple(b.dataset.exempleChoix ?? '');
+  }),
+);
 // Clic n'importe où sur la carte (hors liens et boutons) : même effet
 cartes.forEach((c) =>
   c.addEventListener('click', (e) => {
