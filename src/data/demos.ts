@@ -58,12 +58,23 @@ export const demos: Demo[] = [
     cadrage: '50% 45%',
     enAvant: true,
   },
+  {
+    nom: 'Morel Plomberie',
+    secteur: 'Plombier-chauffagiste',
+    formule: 'essentiel',
+    url: 'https://morel-plomberie.pages.dev',
+    image: '/assets/img/morel-accueil-large-1440.webp',
+    imagePetite: '/assets/img/morel-accueil-large-720.webp',
+    alt: 'Page d’accueil du site Morel Plomberie : titre « Votre plombier à Metz, dépannage rapide 7j/7 », boutons Appeler et Devis, photo d’un plombier sous un évier',
+    description: 'Un plombier fictif à Metz : une seule page pensée pour faire appeler, avec devis en ligne et urgences 7j/7.',
+    phraseFormule: 'Une seule page claire : services, zone d’intervention, avis, horaires et un formulaire de devis, avec le bouton « Appeler » toujours à portée de pouce.',
+    positionImage: 'droite',
+    cadrage: '30% 50%',
+  },
 ];
 
 /** Démo qui illustre une formule (ou undefined s'il n'y en a pas encore). */
 export const demoPourFormule = (slug: string) => demos.find((d) => d.formule === slug);
 
 /** Texte affiché pour une formule sans démo (on n'invente pas de démo). */
-export const sansDemo: Record<string, string> = {
-  essentiel: 'Une page unique, sur le même modèle que la page d’accueil de nos démos.',
-};
+export const sansDemo: Record<string, string> = {};
