@@ -1243,3 +1243,6 @@ h3 {
 .tarifs-formule[data-choisie] {
   color: var(--accent);
 }
+.tarifs-supplement {
+  margin-top: 14px;
+}

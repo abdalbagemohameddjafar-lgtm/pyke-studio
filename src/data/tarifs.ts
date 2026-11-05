@@ -31,6 +31,7 @@ export type Formule = {
   resume: string;
   ideal: string; // « Idéal pour… » (page Tarifs)
   detail: string[]; // tout ce qui est compris (page Tarifs)
+  supplement?: string; // mention discrète sous la liste (page Tarifs)
   pourQui: string; // une ligne sous le nom (accueil)
 };
 
@@ -88,6 +89,7 @@ export const formules: Formule[] = [
       "Jusqu'à 8 pages",
       '1 fonction dynamique au choix : catalogue filtrable, menu, prise de rendez-vous…',
     ],
+    supplement: 'Fonction supplémentaire : sur devis',
   },
 ];
 

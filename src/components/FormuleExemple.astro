@@ -24,6 +24,7 @@ const nomFormule = formules.find((f) => f.slug === slug)?.nom ?? slug;
       <div class="exemple__texte">
         <p class="exemple__nom">{d.nom} <span class="mono discret">· {d.secteur}</span></p>
         <p class="discret">{d.phraseFormule}</p>
+        {d.formule === slug && d.precision && <p class="exemple__precision mono">{d.precision}</p>}
         <a class="lien" href={d.url} target="_blank" rel="noopener">Voir le site <span class="fleche" aria-hidden="true">→</span><span class="cache"> {d.nom} (nouvel onglet)</span></a>
       </div>
     </div>
@@ -72,6 +73,12 @@ const nomFormule = formules.find((f) => f.slug === slug)?.nom ?? slug;
   }
   .exemple__nom .mono {
     letter-spacing: 0.02em;
+  }
+  .exemple__precision {
+    max-width: 62ch;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--encre-2);
   }
   .exemple__vide {
     max-width: 52ch;

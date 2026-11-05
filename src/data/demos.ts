@@ -22,6 +22,7 @@ export type Demo = {
   alt: string;
   description: string; // une phrase (bloc mis en avant)
   phraseFormule: string; // ce que la formule apporte concrètement dans cette démo (bloc des formules)
+  precision?: string; // petite mention sous la démo (Réalisations + exemple de formule), ex. démo plus riche que la formule
   positionImage: 'droite' | 'gauche'; // place de la vignette par rapport au nom (liste Réalisations)
   cadrage: string; // partie de la capture visible dans la vignette-pilule (CSS object-position)
   enAvant?: boolean; // true : démo du bloc « projet mis en avant » (une seule)
@@ -51,6 +52,8 @@ export const demos: Demo[] = [
     alt: 'Page d’accueil du site TSUTSU, comptoir à temaki : lanternes allumées et titre « Roulé à la main. Mangé dans la minute. »',
     description: 'Un comptoir à temaki fictif à Metz : la carte filtrable, la commande à emporter et la réservation au comptoir.',
     phraseFormule: 'Le menu en ligne, avec la commande à emporter : c’est la fonction sur mesure incluse.',
+    precision:
+      'La démo montre plusieurs fonctions (carte filtrable, click & collect, réservation). La formule Vitrine+ en inclut une au choix ; les autres sont disponibles en option.',
     positionImage: 'gauche',
     cadrage: '50% 45%',
     enAvant: true,

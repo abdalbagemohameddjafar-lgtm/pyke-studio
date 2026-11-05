@@ -32,6 +32,7 @@ import {
         {f.detail.map((d) => <li>{d}</li>)}
         {inclusPartout.map((d) => <li>{d}</li>)}
       </ul>
+      {f.supplement && <p class="label tarifs-supplement">{f.supplement}</p>}
       <div class="tarifs-exemple"><FormuleExemple slug={f.slug} /></div>
       <p><a class="lien" href={`/?formule=${f.slug}#devis`}>Choisir la formule {f.nom} <span class="fleche" aria-hidden="true">→</span></a></p>
     </>
