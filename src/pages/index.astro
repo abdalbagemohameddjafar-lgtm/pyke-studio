@@ -10,8 +10,6 @@ import FeaturedDemo from '../components/FeaturedDemo.astro';
 import FormuleExemple from '../components/FormuleExemple.astro';
 import { formules, boutique, maintenance, offreLancement, prixRemise, euros } from '../data/tarifs';
 
-const { fondateur } = studio;
-
 const metiers = [
   { nom: 'Fleuristes', texte: 'Vos compositions en photos, vos horaires et la commande par téléphone.', formule: 'Vitrine' },
   { nom: 'Restaurants et cafés', texte: 'La carte toujours à jour, les horaires et la réservation en un geste.', formule: 'Vitrine+' },
@@ -42,7 +40,6 @@ const questions = [
 const deux = (n: number) => String(n).padStart(2, '0');
 /** 390 → « 390 » (le « € » est composé à part pour la typo des prix) */
 const montant = (n: number) => euros(n).replace(/\s?€$/, '');
-const estPlaceholder = (t: string) => t.startsWith('[');
 // Exemple affiché par défaut sous les formules : celui de la formule « Recommandé »
 const formuleDefaut = formules.find((f) => f.vedette) ?? formules[0];
 const rangDefaut = formules.indexOf(formuleDefaut);
@@ -236,42 +233,16 @@ const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'n
     </div>
   </section>
 
-  <!-- 06 · QUI EST DERRIÈRE (contenus à fournir : src/data/studio.ts → fondateur) -->
-  <section class="section" id="apropos" aria-labelledby="apropos-h">
-    <span class="deco deco--folio" aria-hidden="true">06</span>
-    <span class="forme forme--arche c-sauge f-apropos-arche" aria-hidden="true"></span>
-    <div class="wrap">
-      <div class="grille apropos">
-        <div class="apropos__photo">
-          {fondateur.photo ? (
-            <img src={fondateur.photo} alt={`Portrait de ${fondateur.prenom}`} width="800" height="1000" loading="lazy" />
-          ) : (
-            <div class="photo-vide"><span class="a-completer">[PHOTO À COMPLÉTER]</span></div>
-          )}
-        </div>
-        <div class="apropos__texte">
-          <p class="label">06 — Le studio</p>
-          <h2 id="apropos-h" data-reveal>Qui est derrière Pyke Studio</h2>
-          <p class="apropos__prenom serif"><span class:list={{ 'a-completer': estPlaceholder(fondateur.prenom) }}>{fondateur.prenom}</span></p>
-          {fondateur.presentation.map((p) => (
-            <p class:list={['discret', { 'a-completer': estPlaceholder(p) }]}>{p}</p>
-          ))}
-          <p>Basé à <span class:list={{ 'a-completer': estPlaceholder(fondateur.ville) }}>{fondateur.ville}</span>, on travaille à distance partout en France.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 07 · DEVIS -->
+  <!-- 06 · DEVIS -->
   <section class="section" id="devis" aria-labelledby="devis-h">
-    <span class="deco deco--folio deco--folio-bas" aria-hidden="true">07</span>
+    <span class="deco deco--folio deco--folio-bas" aria-hidden="true">06</span>
     <span class="forme forme--rond c-ardoise f-devis-rond anim-flotte" aria-hidden="true"></span>
     <span class="deco deco--mire deco--mire-gauche" aria-hidden="true"></span>
     <span class="deco deco--nuancier" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     <div class="wrap">
       <div class="grille">
         <div class="devis-texte">
-          <p class="label">07 — Devis</p>
+          <p class="label">06 — Devis</p>
           <h2 id="devis-h" data-reveal>Demander un devis</h2>
           <p class="chapo">Décrivez votre commerce en quelques lignes. Le devis est gratuit, la réponse arrive sous 48&nbsp;h.</p>
           <ul class="contacts" role="list">

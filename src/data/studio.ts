@@ -10,7 +10,7 @@ export const EMAIL = 'pykestudio.contact@gmail.com';
 
 /** Téléphone : null tant qu'il n'est pas fourni (le site affiche alors un emplacement visible).
  *  Format attendu : affichage « 06 12 34 56 78 » et lien « +33612345678 ». */
-export const TELEPHONE: { affichage: string; lien: string } | null = null;
+export const TELEPHONE: { affichage: string; lien: string } | null = { affichage: '07 71 87 56 10', lien: '+33771875610' };
 export const TELEPHONE_A_COMPLETER = '[TÉLÉPHONE À COMPLÉTER]';
 
 export const studio = {

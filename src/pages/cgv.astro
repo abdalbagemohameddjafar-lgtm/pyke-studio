@@ -4,6 +4,7 @@
 // Tout ce qui est entre [crochets] est à rédiger : ne rien publier sans relecture.
 import PageSimple from '../layouts/PageSimple.astro';
 import { studio } from '../data/studio';
+import Telephone from '../components/Telephone.astro';
 import { maintenance } from '../data/tarifs';
 const { legal } = studio;
 const A = (texte = 'À COMPLÉTER') => `[${texte}]`;
@@ -19,7 +20,7 @@ const A = (texte = 'À COMPLÉTER') => `[${texte}]`;
   <p>
     Conditions applicables à compter du <span class="a-completer">{A('DATE À COMPLÉTER')}</span>.<br />
     Prestataire : <strong>{studio.nom}</strong>, {legal.responsable}, {legal.statut}, SIRET {legal.siret}, {legal.adresse}.<br />
-    Contact : <a href={`mailto:${studio.email}`}>{studio.email}</a>.
+    Contact : <a href={`mailto:${studio.email}`}>{studio.email}</a>, <Telephone />.
   </p>
 
   <h2>1. Objet</h2>

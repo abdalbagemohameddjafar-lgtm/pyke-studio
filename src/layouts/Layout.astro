@@ -44,6 +44,7 @@ const jsonLd = {
   description,
   url: studio.url,
   email: studio.email,
+  ...(studio.telephone && { telephone: studio.telephone.lien }),
   areaServed: { '@type': 'Country', name: 'France' },
   sameAs: [studio.instagram, studio.tiktok],
   priceRange: '390 € – 1 500 €+',

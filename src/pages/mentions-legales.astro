@@ -1,6 +1,7 @@
 ---
 import PageSimple from '../layouts/PageSimple.astro';
 import { studio } from '../data/studio';
+import Telephone from '../components/Telephone.astro';
 const { legal, hebergeur } = studio;
 ---
 
@@ -16,6 +17,7 @@ const { legal, hebergeur } = studio;
     SIRET : {legal.siret}<br />
     Adresse : {legal.adresse}<br />
     E-mail : <a href={`mailto:${studio.email}`}>{studio.email}</a><br />
+    Téléphone : <Telephone /><br />
     {legal.tva}
   </p>
   <p>Directeur de la publication : {legal.responsable}.</p>
