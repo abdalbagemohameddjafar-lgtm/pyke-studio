@@ -1,0 +1,15 @@
+---
+// Numéro de téléphone cliquable (tel:), ou emplacement visible tant qu'il n'est pas fourni.
+// Le numéro se règle dans src/data/studio.ts (TELEPHONE).
+import { TELEPHONE, TELEPHONE_A_COMPLETER } from '../data/studio';
+interface Props {
+  class?: string;
+}
+const { class: classe = 'lien' } = Astro.props;
+---
+
+{TELEPHONE ? (
+  <a class={classe} href={`tel:${TELEPHONE.lien}`}>{TELEPHONE.affichage}</a>
+) : (
+  <span class="a-completer">{TELEPHONE_A_COMPLETER}</span>
+)}

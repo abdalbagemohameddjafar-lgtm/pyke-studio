@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pykestudio.fr/sitemap-index.xml

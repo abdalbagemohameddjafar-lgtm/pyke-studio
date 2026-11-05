@@ -1,228 +1,63 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Formules from '../components/Formules.astro';
+import PageSimple from '../layouts/PageSimple.astro';
 import { studio } from '../data/studio';
 import {
   validite,
+  formules,
+  inclusPartout,
   boutique,
   options,
   maintenance,
   conditions,
   offreLancement,
+  prixRemise,
+  PRIX_A_COMPLETER,
   euros,
 } from '../data/tarifs';
 ---
 
-<Layout
+<PageSimple
   titre="Tarifs · Pyke Studio, création de sites web"
-  description="Tarifs Pyke Studio : site Essentiel 390 €, Vitrine 690 €, Vitrine+ 990 €, boutique en ligne dès 1 500 €. Maintenance 29 €/mois. TVA non applicable."
+  h1="Tarifs détaillés"
+  description="Tarifs Pyke Studio : site Essentiel 390 €, Vitrine 690 €, Vitrine+ 990 €, boutique en ligne dès 1 500 €. Maintenance 29 € par mois. TVA non applicable."
 >
-  <section class="haut">
-    <div class="conteneur">
-      <span class="surtitre">Tarifs</span>
-      <h1>Des prix clairs pour un site qui travaille pour vous.</h1>
-      <p>{validite} · Prix nets : {studio.legal.tva}.</p>
-    </div>
-  </section>
+  <p>{validite}. Prix nets : {studio.legal.tva}.{offreLancement && ` ${offreLancement}.`}</p>
 
-  <section class="section">
-    <div class="conteneur bloc">
-      <h2 class="titre-bloc">Création de site</h2>
-      <Formules />
-      <p class="note"><strong>{boutique.nom}</strong> : sur devis, à partir de {euros(boutique.aPartirDe)}.</p>
-    </div>
-
-    <div class="conteneur bloc">
-      <h2 class="titre-bloc">Options</h2>
-      <table class="options">
-        <caption class="visually-hidden">Options et leurs prix</caption>
-        <tbody>
-          {
-            options.map((o) => (
-              <tr>
-                <th scope="row">{o.nom}</th>
-                <td>{euros(o.prix)}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <div class="conteneur bloc">
-      <h2 class="titre-bloc">Maintenance</h2>
-      <div class="maintenance">
-        <div>
-          <p class="maint-prix"><strong>{maintenance.prixMois} €</strong> / mois</p>
-          <small>{maintenance.engagement}</small>
-        </div>
-        <ul>
-          {maintenance.points.map((p) => <li>{p}</li>)}
-        </ul>
-      </div>
-    </div>
-
-    <div class="conteneur bloc">
-      <h2 class="titre-bloc">Conditions</h2>
-      <ul class="conditions">
-        {conditions.map((c) => <li>{c}</li>)}
+  {formules.map((f) => (
+    <>
+      <h2>{f.nom}, {euros(f.prix)}{prixRemise(f.prix) !== null && <span class="accent"> · {euros(prixRemise(f.prix)!)} avec l’offre de lancement</span>}</h2>
+      <p>Idéal pour : {f.ideal}</p>
+      <ul>
+        {f.detail.map((d) => <li>{d}</li>)}
+        {inclusPartout.map((d) => <li>{d}</li>)}
       </ul>
-      <p class="lancement">{offreLancement}</p>
-    </div>
+    </>
+  ))}
 
-    <div class="conteneur cta">
-      <h2>Un projet ? Le devis est gratuit.</h2>
-      <p>Un premier échange par téléphone, visio ou e-mail, sans engagement.</p>
-      <a href="/#contact" class="bouton bouton-sombre">Demander un devis</a>
-    </div>
-  </section>
-</Layout>
+  <h2>{boutique.nom}, dès {euros(boutique.aPartirDe)}</h2>
+  <p>Sur devis, selon le nombre de produits et les modes de paiement.</p>
 
-<style>
-  .haut {
-    background:
-      radial-gradient(circle at 15% 0%, rgba(32, 184, 168, 0.2), transparent 45%),
-      var(--petrole);
-    color: var(--clair);
-    padding-block: clamp(48px, 7vw, 88px);
-  }
-  .haut .surtitre {
-    color: var(--turquoise);
-  }
-  .haut h1 {
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    font-weight: 800;
-    max-width: 20ch;
-  }
-  .haut p {
-    margin-top: 16px;
-    color: var(--gris-clair);
-  }
+  <h2>Options</h2>
+  <ul class="rows" role="list">
+    {options.map((o) => (
+      <li><span class="rows__name">{o.nom}</span><span class="rows__value">{o.prix === null ? <span class="a-completer">{PRIX_A_COMPLETER}</span> : euros(o.prix)}</span></li>
+    ))}
+  </ul>
 
-  .bloc + .bloc {
-    margin-top: clamp(48px, 7vw, 72px);
-  }
-  .titre-bloc {
-    font-size: 1.5rem;
-    font-weight: 800;
-    padding-left: 16px;
-    border-left: 5px solid var(--turquoise);
-    margin-bottom: 24px;
-  }
-  .note {
-    margin-top: 16px;
-    color: var(--gris);
-    font-style: italic;
-  }
-  .note strong {
-    font-style: normal;
-    color: var(--texte);
-  }
+  <h2>Maintenance, {maintenance.prixMois} € par mois</h2>
+  <p>Avec {maintenance.engagement}.</p>
+  <ul>
+    {maintenance.points.map((p) => <li>{p}</li>)}
+  </ul>
 
-  .options {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1.05rem;
-  }
-  .options tr:nth-child(odd) {
-    background: var(--fond);
-  }
-  .options th,
-  .options td {
-    padding: 14px 18px;
-  }
-  .options th {
-    text-align: left;
-    font-weight: 400;
-  }
-  .options td {
-    text-align: right;
-    font-weight: 800;
-    white-space: nowrap;
-  }
+  <h2>Conditions</h2>
+  <ul>
+    {conditions.map((c) => <li>{c}</li>)}
+  </ul>
 
-  .maintenance {
-    padding: 28px;
-    border-radius: var(--rayon);
-    background: var(--fond);
-    display: grid;
-    gap: 20px;
-    align-items: center;
-  }
-  @media (min-width: 720px) {
-    .maintenance {
-      grid-template-columns: 220px 1fr;
-      gap: 40px;
-    }
-  }
-  .maint-prix {
-    font-size: 1.1rem;
-  }
-  .maint-prix strong {
-    font-size: 2.6rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-  .maintenance small {
-    color: var(--gris);
-  }
-  .maintenance ul,
-  .conditions {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 10px;
-  }
-  .maintenance li,
-  .conditions li {
-    position: relative;
-    padding-left: 20px;
-  }
-  .maintenance li::before,
-  .conditions li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.62em;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--turquoise);
-  }
-  .lancement {
-    margin-top: 28px;
-    padding: 18px 20px;
-    border-radius: var(--rayon-petit);
-    background: var(--turquoise);
-    color: var(--petrole);
-    font-weight: 800;
-    font-size: 1.1rem;
-    text-align: center;
-  }
+  <p>Le détail des engagements de chacun figure dans nos <a href="/cgv">conditions générales de vente</a>.</p>
 
-  .cta {
-    margin-top: clamp(56px, 8vw, 88px);
-    text-align: center;
-    display: grid;
-    gap: 12px;
-    justify-items: center;
-  }
-  .cta h2 {
-    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-    font-weight: 800;
-  }
-  .cta p {
-    color: var(--gris);
-    margin-bottom: 8px;
-  }
-
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-</style>
+  <div style="margin-top: 48px">
+    <a href="/#devis" class="bouton">Demander un devis</a>
+  </div>
+</PageSimple>

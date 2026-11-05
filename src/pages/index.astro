@@ -1,820 +1,265 @@
 ---
-import { Image } from 'astro:assets';
+// Page d'accueil de Pyke Studio — mise en page éditoriale.
+// Textes des formules et offre de lancement : src/data/tarifs.ts — coordonnées : src/data/studio.ts.
 import Layout from '../layouts/Layout.astro';
-import Realisations from '../components/Realisations.astro';
-import Formules from '../components/Formules.astro';
 import Formulaire from '../components/Formulaire.astro';
+import Telephone from '../components/Telephone.astro';
 import { studio } from '../data/studio';
-import { boutique, maintenance, offreLancement, euros } from '../data/tarifs';
-import apercu from '../assets/realisations/maison-ambre.jpg';
+import { formules, boutique, maintenance, offreLancement, prixRemise, euros } from '../data/tarifs';
+
+// Adresse du site de démonstration Maison Ambre (hébergé sur Cloudflare Pages) : à changer ici seulement.
+const MAISON_AMBRE = 'https://maison-ambre.pages.dev';
+const { fondateur } = studio;
 
 const metiers = [
-  {
-    nom: 'Fleuristes',
-    texte: 'Vos compositions en photo, vos horaires et la commande en un appel.',
-    icone: 'M12 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v14M12 14c-3 0-6-2-6-5 3 0 6 2 6 5Zm0 0c3 0 6-2 6-5-3 0-6 2-6 5Z',
-  },
-  {
-    nom: 'Tatoueurs',
-    texte: 'Un portfolio qui met vos flashs en valeur et une prise de contact simple.',
-    icone: 'M4 20 15 9m-2-2 4 4m-1-7 4 4-3 3-4-4 3-3ZM4 20l1-4 3 3-4 1Z',
-  },
-  {
-    nom: 'Restaurants',
-    texte: 'La carte toujours à jour, les horaires et la réservation au bout du doigt.',
-    icone: 'M7 2v9a2 2 0 0 1-2 2v9M7 2v6M4 2v6a3 3 0 0 0 3 3m3-9v6a3 3 0 0 1-3 3m10 11V2c-2 1-3 4-3 8h3',
-  },
-  {
-    nom: 'Boutiques',
-    texte: 'Vos produits, votre univers et l’envie de passer la porte du magasin.',
-    icone: 'M4 7h16l-1 13H5L4 7Zm4 0a4 4 0 0 1 8 0',
-  },
-];
-
-const atouts = [
-  {
-    titre: 'Pensé pour le mobile',
-    texte: 'La plupart de vos clients vous cherchent sur leur téléphone. Votre site y est parfait.',
-  },
-  {
-    titre: 'Trouvé sur Google',
-    texte: 'Fiche Google configurée et référencement local : on vous trouve quand on cherche « près de moi ».',
-  },
-  {
-    titre: 'En ligne en 7 à 10 jours',
-    texte: 'Pas de projet qui traîne des mois. Dès réception de vos contenus, votre site est prêt rapidement.',
-  },
-  {
-    titre: 'Un interlocuteur unique',
-    texte: 'La même personne suit votre projet du début à la fin. Pas de plateforme, pas de centre d’appel.',
-  },
+  { nom: 'Fleuristes', texte: 'Vos compositions en photos, vos horaires et la commande par téléphone.', formule: 'Vitrine' },
+  { nom: 'Restaurants et cafés', texte: 'La carte toujours à jour, les horaires et la réservation en un geste.', formule: 'Vitrine+' },
+  { nom: 'Salons de tatouage', texte: 'Un portfolio de vos flashs et une demande de rendez-vous simple.', formule: 'Vitrine' },
+  { nom: 'Boutiques', texte: 'Vos produits, votre univers et l’adresse pour passer en magasin.', formule: 'Essentiel' },
 ];
 
 const etapes = [
-  {
-    titre: 'On échange',
-    texte: 'Un premier échange par téléphone, visio ou e-mail pour comprendre votre activité et vos besoins. Gratuit et sans engagement.',
-  },
-  {
-    titre: 'Devis et signature',
-    texte: 'Vous recevez un devis clair, au prix affiché. 40 % d’acompte à la signature pour lancer le projet.',
-  },
-  {
-    titre: 'Création du site',
-    texte: 'Votre site est prêt sous 7 à 10 jours après réception de vos contenus. 2 séries de corrections incluses.',
-  },
-  {
-    titre: 'Mise en ligne et suivi',
-    texte: `Le solde est réglé à la mise en ligne. Avec la maintenance (${maintenance.prixMois} €/mois), on s’occupe de tout ensuite.`,
-  },
+  { titre: 'Décrire votre commerce', texte: 'Un premier échange gratuit, puis un devis au prix affiché. 40 % d’acompte à la signature.' },
+  { titre: 'Valider la maquette', texte: 'Vous relisez votre site avant sa sortie. Deux séries de corrections sont incluses.' },
+  { titre: 'Mettre le site en ligne', texte: 'Le solde est réglé à la mise en ligne. Ensuite, la maintenance s’occupe du reste.' },
 ];
 
 const questions = [
   {
-    q: 'Je n’ai pas de textes ni de photos, c’est un problème ?',
-    r: 'Pas du tout. On peut rédiger vos textes (option à 120 €) et s’occuper de vos photos (option à 100 €).',
+    q: 'Je n’ai ni textes ni photos, c’est un problème ?',
+    r: 'Non. Nous rédigeons vos textes (120 €) et nous vous envoyons un guide simple pour prendre de bonnes photos avec votre téléphone. Nous les retouchons ensuite pour le site.',
   },
   {
-    q: 'Le nom de domaine et l’hébergement, c’est compris ?',
-    r: `Oui, avec la maintenance à ${maintenance.prixMois} €/mois (engagement 12 mois) : hébergement, nom de domaine, mises à jour, sauvegardes et 30 minutes de modifications chaque mois.`,
+    q: 'Le nom de domaine et l’hébergement sont compris ?',
+    r: `Oui, avec la maintenance à ${maintenance.prixMois} € par mois (${maintenance.engagement}), mises à jour et sauvegardes comprises.`,
   },
-  {
-    q: 'Je pourrai changer mes horaires ou mes prix ?',
-    r: 'Oui. Envoyez-nous un message : les petites modifications (horaires, photos, prix…) sont comprises dans les 30 minutes mensuelles de la maintenance.',
-  },
-  {
-    q: 'Vous travaillez avec qui, et où ?',
-    r: 'Avec les artisans et commerçants de toute la France. Tout se fait simplement à distance : téléphone, visio, e-mail.',
-  },
-  {
-    q: 'Faut-il payer la TVA en plus ?',
-    r: 'Non. Pyke Studio est une micro-entreprise : TVA non applicable (art. 293 B du CGI). Les prix affichés sont les prix que vous payez.',
-  },
+  { q: 'Je pourrai changer mes horaires ou mes prix ?', r: 'Oui. Envoyez-nous un message : 30 minutes de modifications par mois sont comprises dans la maintenance.' },
+  { q: 'Vous travaillez dans quelle ville ?', r: 'Partout en France. Tout se fait à distance, par téléphone, visio ou e-mail.' },
+  { q: 'Faut-il ajouter la TVA ?', r: 'Non. Pyke Studio est une micro-entreprise, TVA non applicable : vous payez le prix affiché.' },
 ];
+
+const deux = (n: number) => String(n).padStart(2, '0');
+/** 390 → « 390 » (le « € » est composé à part pour la typo des prix) */
+const montant = (n: number) => euros(n).replace(/\s?€$/, '');
+const estPlaceholder = (t: string) => t.startsWith('[');
 ---
 
-<Layout>
-  <!-- ========== Accueil ========== -->
-  <section class="hero">
-    <div class="conteneur hero-in">
-      <div class="hero-texte">
-        <p class="pastille"><span></span>{offreLancement}</p>
-        <h1>Un site web qui donne envie de <em>pousser votre porte</em>.</h1>
-        <p class="hero-intro">
-          Pyke Studio crée des sites simples, rapides et soignés pour les artisans et commerçants :
-          fleuristes, tatoueurs, restaurants, boutiques… Vous nous parlez de votre activité, on
-          s’occupe de tout.
-        </p>
-        <div class="hero-actions">
-          <a href="#contact" class="bouton bouton-plein">Demander un devis gratuit</a>
-          <a href="#offres" class="bouton bouton-contour">Voir les offres</a>
-        </div>
-        <ul class="hero-preuves" role="list">
-          <li><strong>dès 390 €</strong> sans TVA</li>
-          <li><strong>7 à 10 jours</strong> pour être en ligne</li>
-          <li><strong>100 %</strong> adapté mobile</li>
-        </ul>
+<Layout accueil>
+  <!-- 00 · ACCUEIL -->
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <div class="wrap">
+      <div class="hero__haut">
+        <p class="label">Studio web · Partout en France</p>
+        {offreLancement && <p class="label accent">{offreLancement}</p>}
       </div>
-
-      <div class="hero-visuel" aria-hidden="true">
-        <div class="navigateur">
-          <div class="navigateur-barre"><i></i><i></i><i></i><span>votre-commerce.fr</span></div>
-          <Image src={apercu} alt="" widths={[600, 900]} sizes="(min-width: 900px) 520px, 90vw" loading="eager" />
-        </div>
-        <div class="telephone">
-          <div class="telephone-ecran">
-            <span class="tel-logo"></span>
-            <span class="tel-ligne l1"></span>
-            <span class="tel-ligne l2"></span>
-            <span class="tel-bouton">Appeler</span>
-            <span class="tel-carte"></span>
+      <div class="grille">
+        <h1 id="hero-h" data-reveal>Sites web pour artisans et commerçants</h1>
+        <div class="hero__cote">
+          <p class="chapo">Une page ou un site complet, pensé pour le mobile et trouvé sur Google. Dès 390&nbsp;€, en ligne 7 à 10&nbsp;jours après réception de vos contenus.</p>
+          <div class="hero__actions">
+            <a class="bouton" href="#devis">Demander un devis <span class="fleche" aria-hidden="true">→</span></a>
+            <a class="lien" href="#formules">Voir les formules</a>
           </div>
         </div>
+        <figure class="hero__image">
+          <div class="capture">
+            <img
+              src="/assets/img/ma-accueil-large-1440.webp"
+              srcset="/assets/img/ma-accueil-large-720.webp 720w, /assets/img/ma-accueil-large-1440.webp 1440w"
+              sizes="(min-width: 768px) 92vw, 100vw"
+              width="1440" height="800"
+              alt="Page d’accueil du site de la parfumerie Maison Ambre"
+              fetchpriority="high"
+            />
+          </div>
+          <figcaption class="legende mono discret"><span>Site de démonstration — Maison Ambre, parfumerie</span><span>2026</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
-  <!-- ========== Pour qui ========== -->
-  <section class="section" aria-labelledby="titre-pourqui">
-    <div class="conteneur">
-      <div class="entete-section">
-        <span class="surtitre">Pour qui ?</span>
-        <h2 class="titre-section" id="titre-pourqui">Les commerces qui méritent d’être vus.</h2>
-        <p class="intro-section">
-          Vos clients vous cherchent sur Google avant de se déplacer. Sans site, ils tombent sur
-          le voisin. Avec Pyke Studio, vous avez enfin une vitrine en ligne à votre image.
-        </p>
+  <!-- 01 · MÉTIERS -->
+  <section class="section" id="metiers" aria-labelledby="metiers-h">
+    <div class="wrap">
+      <div class="section__tete">
+        <p class="section__num label">01 — Métiers</p>
+        <h2 id="metiers-h" data-reveal>Des sites pour les commerces de proximité</h2>
+        <p class="chapo">Chaque métier a ses besoins : votre site met en avant ce que vos clients cherchent.</p>
       </div>
-      <ul class="metiers" role="list">
-        {
-          metiers.map((m) => (
-            <li class="metier">
-              <span class="metier-icone">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d={m.icone} />
-                </svg>
-              </span>
-              <h3>{m.nom}</h3>
-              <p>{m.texte}</p>
-            </li>
-          ))
-        }
+      <ul class="tableau" role="list">
+        {metiers.map((m, i) => (
+          <li>
+            <span class="t-num mono discret">{deux(i + 1)}</span>
+            <span class="t-nom serif">{m.nom}</span>
+            <span class="t-texte">{m.texte}</span>
+            <span class="t-formule mono">{m.formule}</span>
+          </li>
+        ))}
       </ul>
     </div>
   </section>
 
-  <!-- ========== Atouts ========== -->
-  <section class="section section-sombre" aria-labelledby="titre-atouts">
-    <div class="conteneur">
-      <div class="entete-section">
-        <span class="surtitre">Ce que vous obtenez</span>
-        <h2 class="titre-section" id="titre-atouts">Un vrai site professionnel, sans prise de tête.</h2>
+  <!-- 02 · RÉALISATIONS : captures ordinateur, et captures téléphone sous 600 px -->
+  <section class="section" id="realisations" aria-labelledby="realisations-h">
+    <div class="wrap">
+      <div class="section__tete">
+        <p class="section__num label">02 — Réalisations</p>
+        <h2 id="realisations-h" data-reveal>Maison Ambre, notre site de démonstration</h2>
+        <p class="chapo">Une parfumerie fictive : 73 parfums, des filtres et un test olfactif.</p>
+        <p><a class="lien" href={MAISON_AMBRE} target="_blank" rel="noopener">Voir le site <span class="fleche" aria-hidden="true">→</span><span class="cache"> (nouvel onglet)</span></a></p>
       </div>
-      <ol class="atouts" role="list">
-        {
-          atouts.map((a, i) => (
-            <li class="atout">
-              <span class="atout-num">{String(i + 1).padStart(2, '0')}</span>
-              <h3>{a.titre}</h3>
-              <p>{a.texte}</p>
-            </li>
-          ))
-        }
+      <div class="grille duo">
+        <a href={`${MAISON_AMBRE}/#collection`} target="_blank" rel="noopener">
+          <div class="capture">
+            <picture>
+              <source media="(max-width: 599px)" srcset="/assets/img/ma-collection-mobile.webp" width="390" height="520" />
+              <img src="/assets/img/ma-collection-1256.webp" srcset="/assets/img/ma-collection-640.webp 640w, /assets/img/ma-collection-1256.webp 1256w" sizes="(min-width: 768px) 58vw, 100vw" width="1256" height="942" alt="Collection de parfums du site Maison Ambre, avec filtres et tri" loading="lazy" />
+            </picture>
+          </div>
+          <p class="legende mono discret"><span>La collection<span class="cache"> (nouvel onglet)</span></span><span aria-hidden="true">↗</span></p>
+        </a>
+        <a href={`${MAISON_AMBRE}/parfums/ambre-dore/`} target="_blank" rel="noopener">
+          <div class="capture">
+            <picture>
+              <source media="(max-width: 599px)" srcset="/assets/img/ma-fiche-mobile.webp" width="390" height="520" />
+              <img src="/assets/img/ma-fiche-1256.webp" srcset="/assets/img/ma-fiche-640.webp 640w, /assets/img/ma-fiche-1256.webp 1256w" sizes="(min-width: 768px) 42vw, 100vw" width="1256" height="942" alt="Fiche du parfum Ambre Doré sur le site Maison Ambre" loading="lazy" />
+            </picture>
+          </div>
+          <p class="legende mono discret"><span>Fiche parfum<span class="cache"> (nouvel onglet)</span></span><span aria-hidden="true">↗</span></p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · MÉTHODE -->
+  <section class="section" id="methode" aria-labelledby="methode-h">
+    <div class="wrap">
+      <div class="section__tete">
+        <p class="section__num label">03 — Méthode</p>
+        <h2 id="methode-h" data-reveal>Votre site en 3 étapes</h2>
+        <p class="chapo">Tout se fait à distance, par téléphone, visio ou e-mail, où que vous soyez en France.</p>
+      </div>
+      <ol class="colonnes" role="list">
+        {etapes.map((e, i) => (
+          <li>
+            <span class="etape-num" aria-hidden="true">{deux(i + 1)}</span>
+            <h3>{e.titre}</h3>
+            <p class="discret">{e.texte}</p>
+          </li>
+        ))}
       </ol>
     </div>
   </section>
 
-  <!-- ========== Réalisations ========== -->
-  <section class="section section-fond" id="realisations" aria-labelledby="titre-real">
-    <div class="conteneur">
-      <div class="entete-section">
-        <span class="surtitre">Réalisations</span>
-        <h2 class="titre-section" id="titre-real">Nos derniers sites.</h2>
-        <p class="intro-section">
-          Des sites de démonstration pour vous montrer ce qu’on sait faire, et bientôt ceux de nos
-          premiers clients. Cliquez pour les visiter.
+  <!-- 04 · FORMULES -->
+  <section class="section" id="formules" aria-labelledby="formules-h">
+    <div class="wrap">
+      <div class="section__tete">
+        <p class="section__num label">04 — Formules</p>
+        <h2 id="formules-h" data-reveal>Formules et prix</h2>
+        <p class="chapo">Prix nets, TVA non applicable.</p>
+      </div>
+      <div class="formules">
+        {formules.map((f) => {
+          const remise = prixRemise(f.prix);
+          return (
+            <article class="formule">
+              <div class="formule__tete">
+                <h3>{f.nom}</h3>
+                {f.vedette && <span class="label accent">Recommandé</span>}
+              </div>
+              <p class="discret">{f.pourQui}</p>
+              {remise !== null ? (
+                <div class="prix-ligne">
+                  <p class="prix"><span class="cache">Prix de lancement : </span>{montant(remise)}<small>€</small></p>
+                  <p class="prix-avant mono"><span class="cache">au lieu de </span><s>{euros(f.prix)}</s></p>
+                </div>
+              ) : (
+                <p class="prix">{montant(f.prix)}<small>€</small></p>
+              )}
+              <div class="points">
+                {f.inclut && <p class="label">{f.inclut}</p>}
+                <ul role="list">
+                  {f.points.map((x) => <li>{x}</li>)}
+                </ul>
+              </div>
+              <a class="lien" href={`?formule=${f.slug}#devis`} data-formule={f.nom}>Choisir cette formule <span class="fleche" aria-hidden="true">→</span></a>
+            </article>
+          );
+        })}
+      </div>
+      <div class="offres-plus">
+        <p>
+          {offreLancement && <>{offreLancement} (prix barré = prix normal). </>}
+          {boutique.nom} sur devis, dès {euros(boutique.aPartirDe)}. Maintenance {maintenance.prixMois} € par mois avec {maintenance.engagement} : hébergement, nom de domaine et modifications.
         </p>
-      </div>
-      <Realisations />
-    </div>
-  </section>
-
-  <!-- ========== Offres ========== -->
-  <section class="section" id="offres" aria-labelledby="titre-offres">
-    <div class="conteneur">
-      <div class="entete-section centre">
-        <span class="surtitre">Offres</span>
-        <h2 class="titre-section" id="titre-offres">Des prix clairs, affichés, sans surprise.</h2>
-        <p class="intro-section">Prix nets : TVA non applicable. Vous payez exactement ce qui est écrit.</p>
-      </div>
-
-      <Formules survol />
-
-      <p class="boutique-ligne">
-        <strong>{boutique.nom}</strong> : sur devis, à partir de {euros(boutique.aPartirDe)}.
-      </p>
-
-      <div class="maintenance">
-        <div class="maintenance-prix">
-          <span class="surtitre">Maintenance</span>
-          <p><strong>{maintenance.prixMois} €</strong> / mois</p>
-          <small>{maintenance.engagement}</small>
-        </div>
-        <ul>
-          {maintenance.points.map((p) => <li>{p}</li>)}
-        </ul>
-      </div>
-
-      <div class="offres-bas">
-        <p class="lancement">{offreLancement}</p>
-        <a href="/tarifs" class="lien-fleche">Options, maintenance et conditions en détail <span aria-hidden="true">→</span></a>
+        <a class="lien" href="/tarifs">Voir tous les tarifs <span class="fleche" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>
 
-  <!-- ========== Méthode ========== -->
-  <section class="section section-fond" id="methode" aria-labelledby="titre-methode">
-    <div class="conteneur">
-      <div class="entete-section">
-        <span class="surtitre">Méthode</span>
-        <h2 class="titre-section" id="titre-methode">Du premier échange à la mise en ligne.</h2>
+  <!-- 05 · QUESTIONS -->
+  <section class="section" id="questions" aria-labelledby="questions-h">
+    <div class="wrap">
+      <div class="section__tete">
+        <p class="section__num label">05 — Questions</p>
+        <h2 id="questions-h" data-reveal>Questions fréquentes</h2>
+        <p class="chapo">Une autre question&#8239;? <a class="lien" href="#devis">Écrivez-nous</a>, nous répondons sous 48&nbsp;h.</p>
       </div>
-      <ol class="etapes" role="list">
-        {
-          etapes.map((e, i) => (
-            <li class="etape">
-              <span class="etape-num">{i + 1}</span>
-              <h3>{e.titre}</h3>
-              <p>{e.texte}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
-
-  <!-- ========== Questions ========== -->
-  <section class="section" aria-labelledby="titre-faq">
-    <div class="conteneur faq-in">
-      <div class="entete-section">
-        <span class="surtitre">Questions fréquentes</span>
-        <h2 class="titre-section" id="titre-faq">Vous vous demandez peut-être…</h2>
-      </div>
-      <div class="faq">
-        {
-          questions.map((x) => (
-            <details>
-              <summary>{x.q}</summary>
+      <div class="grille">
+        <div class="faq">
+          {questions.map((x, i) => (
+            <details open={i === 0}>
+              <summary>{x.q}<span class="plus" aria-hidden="true"></span></summary>
               <p>{x.r}</p>
             </details>
-          ))
-        }
+          ))}
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== Contact ========== -->
-  <section class="section section-sombre" id="contact" aria-labelledby="titre-contact">
-    <div class="conteneur contact-in">
-      <div class="contact-texte">
-        <span class="surtitre">Contact</span>
-        <h2 class="titre-section" id="titre-contact">Parlons de votre site.</h2>
-        <p class="intro-section">
-          Décrivez-nous votre commerce en quelques mots : on vous répond sous 48 h pour en discuter.
-          Le devis est gratuit.
-        </p>
-        <ul class="contact-directs" role="list">
-          <li>
-            <span>E-mail</span>
-            <a href={`mailto:${studio.email}`}>{studio.email}</a>
-          </li>
-          <li>
-            <span>Instagram</span>
-            <a href={studio.instagram} target="_blank" rel="noopener">{studio.pseudo}</a>
-          </li>
-          <li>
-            <span>TikTok</span>
-            <a href={studio.tiktok} target="_blank" rel="noopener">{studio.pseudo}</a>
-          </li>
-          <li>
-            <span>Zone</span>
-            {studio.zone}
-          </li>
-        </ul>
+  <!-- 06 · QUI EST DERRIÈRE (contenus à fournir : src/data/studio.ts → fondateur) -->
+  <section class="section" id="apropos" aria-labelledby="apropos-h">
+    <div class="wrap">
+      <div class="grille apropos">
+        <div class="apropos__photo">
+          {fondateur.photo ? (
+            <img src={fondateur.photo} alt={`Portrait de ${fondateur.prenom}`} width="800" height="1000" loading="lazy" />
+          ) : (
+            <div class="photo-vide"><span class="a-completer">[PHOTO À COMPLÉTER]</span></div>
+          )}
+        </div>
+        <div class="apropos__texte">
+          <p class="label">06 — Le studio</p>
+          <h2 id="apropos-h" data-reveal>Qui est derrière Pyke Studio</h2>
+          <p class="apropos__prenom serif"><span class:list={{ 'a-completer': estPlaceholder(fondateur.prenom) }}>{fondateur.prenom}</span></p>
+          {fondateur.presentation.map((p) => (
+            <p class:list={['discret', { 'a-completer': estPlaceholder(p) }]}>{p}</p>
+          ))}
+          <p>Basé à <span class:list={{ 'a-completer': estPlaceholder(fondateur.ville) }}>{fondateur.ville}</span>, on travaille à distance partout en France.</p>
+        </div>
       </div>
-      <Formulaire />
+    </div>
+  </section>
+
+  <!-- 07 · DEVIS -->
+  <section class="section" id="devis" aria-labelledby="devis-h">
+    <div class="wrap">
+      <div class="grille">
+        <div class="devis-texte">
+          <p class="label">07 — Devis</p>
+          <h2 id="devis-h" data-reveal>Demander un devis</h2>
+          <p class="chapo">Décrivez votre commerce en quelques lignes. Le devis est gratuit, la réponse arrive sous 48&nbsp;h.</p>
+          <ul class="contacts" role="list">
+            <li><span class="label">E-mail</span><a class="lien" href={`mailto:${studio.email}`}>{studio.email}</a></li>
+            <li><span class="label">Téléphone</span><Telephone /></li>
+          </ul>
+        </div>
+        <div class="devis-form">
+          <Formulaire />
+        </div>
+      </div>
     </div>
   </section>
 </Layout>
-
-<style>
-  /* ---------- Accueil ---------- */
-  .hero {
-    position: relative;
-    overflow: hidden;
-    background:
-      radial-gradient(circle at 12% 10%, rgba(32, 184, 168, 0.2), transparent 40%),
-      radial-gradient(circle at 90% 85%, rgba(32, 184, 168, 0.12), transparent 40%),
-      linear-gradient(160deg, var(--petrole) 0%, var(--petrole-2) 100%);
-    color: var(--clair);
-    padding-block: clamp(48px, 8vw, 104px) clamp(64px, 9vw, 120px);
-  }
-  .hero-in {
-    display: grid;
-    gap: 56px;
-    align-items: center;
-  }
-  @media (min-width: 960px) {
-    .hero-in {
-      grid-template-columns: 1.1fr 1fr;
-    }
-  }
-  .pastille {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 14px 6px 10px;
-    border: 1px solid rgba(32, 184, 168, 0.45);
-    border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--turquoise-clair);
-    background: rgba(32, 184, 168, 0.08);
-  }
-  .pastille span {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--turquoise);
-    box-shadow: 0 0 0 4px rgba(32, 184, 168, 0.25);
-  }
-  .hero h1 {
-    margin-top: 22px;
-    font-size: clamp(2.3rem, 6vw, 3.9rem);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1.05;
-  }
-  .hero h1 em {
-    font-style: normal;
-    color: var(--turquoise);
-  }
-  .hero-intro {
-    margin-top: 22px;
-    max-width: 52ch;
-    font-size: 1.15rem;
-    color: var(--gris-clair);
-  }
-  .hero-actions {
-    margin-top: 32px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .hero-preuves {
-    list-style: none;
-    margin: 40px 0 0;
-    padding: 24px 0 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px 32px;
-    color: var(--gris-clair);
-    font-size: 0.95rem;
-  }
-  .hero-preuves strong {
-    display: block;
-    color: var(--blanc);
-    font-size: 1.25rem;
-    font-weight: 800;
-  }
-
-  .hero-visuel {
-    position: relative;
-    max-width: 560px;
-    width: 100%;
-    margin-inline: auto;
-    padding-bottom: 40px;
-  }
-  .navigateur {
-    border-radius: 14px;
-    overflow: hidden;
-    background: var(--blanc);
-    box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.6);
-    transform: perspective(1400px) rotateY(-6deg) rotateX(3deg);
-  }
-  .navigateur-barre {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 12px;
-    background: #e9eef0;
-  }
-  .navigateur-barre i {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #c5d0d4;
-  }
-  .navigateur-barre span {
-    margin-left: 10px;
-    flex: 1;
-    padding: 3px 10px;
-    border-radius: 6px;
-    background: var(--blanc);
-    font-size: 0.75rem;
-    color: var(--gris);
-  }
-  .navigateur :global(img) {
-    width: 100%;
-    height: auto;
-  }
-  .telephone {
-    position: absolute;
-    right: -6px;
-    bottom: 0;
-    width: 30%;
-    min-width: 120px;
-    aspect-ratio: 9 / 18;
-    padding: 7px;
-    border-radius: 22px;
-    background: #0a1f28;
-    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-  }
-  .telephone-ecran {
-    height: 100%;
-    border-radius: 16px;
-    background: var(--clair);
-    padding: 14px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .tel-logo {
-    width: 34%;
-    height: 8px;
-    border-radius: 4px;
-    background: var(--petrole);
-  }
-  .tel-ligne {
-    height: 7px;
-    border-radius: 4px;
-    background: #cbd8dc;
-  }
-  .tel-ligne.l1 {
-    margin-top: 12px;
-    width: 90%;
-    height: 12px;
-    background: var(--petrole);
-  }
-  .tel-ligne.l2 {
-    width: 70%;
-  }
-  .tel-bouton {
-    margin-top: 6px;
-    padding: 6px;
-    border-radius: 8px;
-    background: var(--turquoise);
-    color: var(--petrole);
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-align: center;
-  }
-  .tel-carte {
-    flex: 1;
-    border-radius: 8px;
-    background:
-      linear-gradient(90deg, transparent 48%, #d3dee1 48% 52%, transparent 52%),
-      linear-gradient(0deg, transparent 46%, #d3dee1 46% 54%, transparent 54%),
-      #e6eef0;
-    position: relative;
-  }
-  .tel-carte::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 14px;
-    height: 14px;
-    border-radius: 50% 50% 50% 0;
-    background: var(--turquoise);
-    transform: translate(-50%, -70%) rotate(-45deg);
-  }
-  @media (max-width: 540px) {
-    .telephone {
-      right: -4px;
-      min-width: 96px;
-    }
-  }
-
-  /* ---------- Pour qui ---------- */
-  .metiers {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 18px;
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 600px) {
-    .metiers {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 1000px) {
-    .metiers {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  .metier {
-    padding: 26px 22px;
-    border: 1px solid var(--bord);
-    border-radius: var(--rayon);
-    background: var(--blanc);
-  }
-  .metier-icone {
-    display: grid;
-    place-items: center;
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    background: rgba(32, 184, 168, 0.12);
-    color: var(--turquoise-fonce);
-    margin-bottom: 18px;
-  }
-  .metier h3 {
-    font-size: 1.2rem;
-    font-weight: 800;
-  }
-  .metier p {
-    margin-top: 6px;
-    color: var(--gris);
-  }
-
-  /* ---------- Atouts ---------- */
-  .atouts {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0;
-    grid-template-columns: 1fr;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  @media (min-width: 760px) {
-    .atouts {
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: 48px;
-    }
-  }
-  .atout {
-    padding: 28px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    column-gap: 8px;
-  }
-  .atout-num {
-    grid-row: span 2;
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--turquoise);
-  }
-  .atout h3 {
-    font-size: 1.3rem;
-    font-weight: 800;
-    color: var(--blanc);
-  }
-  .atout p {
-    margin-top: 6px;
-    color: var(--gris-clair);
-  }
-
-  /* ---------- Offres ---------- */
-  .boutique-ligne {
-    margin-top: 20px;
-    text-align: center;
-    color: var(--gris);
-  }
-  .boutique-ligne strong {
-    color: var(--texte);
-  }
-  .maintenance {
-    margin-top: 32px;
-    padding: 28px;
-    border-radius: var(--rayon);
-    background: var(--fond);
-    border: 1px solid var(--bord);
-    display: grid;
-    gap: 20px;
-    align-items: center;
-  }
-  @media (min-width: 760px) {
-    .maintenance {
-      grid-template-columns: 240px 1fr;
-      gap: 40px;
-    }
-  }
-  .maintenance-prix .surtitre {
-    margin-bottom: 4px;
-  }
-  .maintenance-prix p {
-    font-size: 1.1rem;
-  }
-  .maintenance-prix strong {
-    font-size: 2.4rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-  .maintenance-prix small {
-    color: var(--gris);
-    font-size: 0.9rem;
-  }
-  .maintenance ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 8px;
-  }
-  .maintenance li {
-    position: relative;
-    padding-left: 20px;
-  }
-  .maintenance li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.62em;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--turquoise);
-  }
-  .offres-bas {
-    margin-top: 28px;
-    display: grid;
-    gap: 18px;
-    justify-items: center;
-    text-align: center;
-  }
-  .lancement {
-    width: 100%;
-    padding: 16px 20px;
-    border-radius: var(--rayon-petit);
-    background: var(--turquoise);
-    color: var(--petrole);
-    font-weight: 800;
-    font-size: 1.1rem;
-  }
-  .lien-fleche {
-    font-weight: 600;
-    color: var(--turquoise-fonce);
-    text-underline-offset: 4px;
-  }
-
-  /* ---------- Méthode ---------- */
-  .etapes {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 18px;
-    grid-template-columns: 1fr;
-    counter-reset: etape;
-  }
-  @media (min-width: 640px) {
-    .etapes {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 1040px) {
-    .etapes {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  .etape {
-    padding: 26px 22px;
-    border-radius: var(--rayon);
-    background: var(--blanc);
-    border: 1px solid var(--bord);
-  }
-  .etape-num {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--petrole);
-    color: var(--turquoise);
-    font-weight: 800;
-    font-size: 1.15rem;
-    margin-bottom: 16px;
-  }
-  .etape h3 {
-    font-size: 1.2rem;
-    font-weight: 800;
-  }
-  .etape p {
-    margin-top: 6px;
-    color: var(--gris);
-  }
-
-  /* ---------- FAQ ---------- */
-  .faq-in {
-    display: grid;
-    gap: 0;
-  }
-  @media (min-width: 960px) {
-    .faq-in {
-      grid-template-columns: 1fr 1.4fr;
-      gap: 56px;
-    }
-  }
-  .faq {
-    border-top: 1px solid var(--bord);
-  }
-  .faq details {
-    border-bottom: 1px solid var(--bord);
-  }
-  .faq summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 20px 44px 20px 0;
-    position: relative;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-  .faq summary::-webkit-details-marker {
-    display: none;
-  }
-  .faq summary::after {
-    content: '+';
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 30px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--fond);
-    color: var(--turquoise-fonce);
-    font-size: 1.3rem;
-    font-weight: 600;
-    transition: transform 0.2s ease;
-  }
-  .faq details[open] summary::after {
-    transform: translateY(-50%) rotate(45deg);
-  }
-  .faq summary:hover {
-    color: var(--turquoise-fonce);
-  }
-  .faq details p {
-    padding: 0 44px 22px 0;
-    color: var(--gris);
-  }
-
-  /* ---------- Contact ---------- */
-  .contact-in {
-    display: grid;
-    gap: 40px;
-    align-items: start;
-  }
-  @media (min-width: 960px) {
-    .contact-in {
-      grid-template-columns: 1fr 1.25fr;
-      gap: 64px;
-    }
-  }
-  .contact-directs {
-    list-style: none;
-    margin: 32px 0 0;
-    padding: 0;
-    display: grid;
-    gap: 16px;
-  }
-  .contact-directs li {
-    display: grid;
-    gap: 2px;
-    color: var(--clair);
-  }
-  .contact-directs span {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--gris-clair);
-  }
-  .contact-directs a {
-    font-weight: 600;
-    font-size: 1.1rem;
-    text-decoration: none;
-    overflow-wrap: anywhere;
-    color: var(--clair);
-  }
-  .contact-directs a:hover {
-    color: var(--turquoise-clair);
-  }
-</style>

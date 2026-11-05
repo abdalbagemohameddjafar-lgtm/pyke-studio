@@ -24,6 +24,7 @@ const { legal, hebergeur } = studio;
   <p>
     {hebergeur.nom}<br />
     {hebergeur.adresse}<br />
+    Téléphone : <span class="a-completer">{hebergeur.telephone}</span><br />
     <a href={hebergeur.site} target="_blank" rel="noopener">{hebergeur.site}</a>
   </p>
 
@@ -37,8 +38,9 @@ const { legal, hebergeur } = studio;
 
   <h2 id="donnees">Données personnelles</h2>
   <p>
-    Quand vous utilisez le formulaire de contact, nous recevons votre nom, votre e-mail et, si vous
-    les indiquez, votre téléphone, le nom de votre commerce et votre message. Ces informations
+    Quand vous utilisez le formulaire de devis, nous recevons votre nom, votre e-mail, la formule
+    choisie, votre message et, si vous les indiquez, votre téléphone ainsi que le nom et la ville de
+    votre commerce. Ces informations
     servent uniquement à répondre à votre demande et à établir un devis.
   </p>
   <ul>
@@ -48,10 +50,18 @@ const { legal, hebergeur } = studio;
       <strong>Durée de conservation :</strong> 3 ans après notre dernier échange, puis suppression.
     </li>
     <li>
-      <strong>Destinataires :</strong> uniquement {studio.nom}. Les messages transitent par
-      le service d’envoi FormSubmit (formsubmit.co) jusqu’à notre boîte e-mail. Vos données ne sont jamais vendues ni cédées.
+      <strong>Destinataires :</strong> uniquement {studio.nom}. Pour des raisons techniques, les
+      messages transitent par le service d’envoi FormSubmit (formsubmit.co) et par Google (messagerie
+      Gmail, qui les reçoit). Vos données ne sont jamais vendues ni cédées.
     </li>
   </ul>
+  <p>
+    <strong>Transfert hors de l’Union européenne :</strong> l’hébergeur Cloudflare, Inc., le service
+    d’envoi FormSubmit et Google LLC (Gmail) traitent les messages hors de l’Union européenne, notamment
+    aux États-Unis. Ces transferts sont encadrés par le Data Privacy Framework UE–États-Unis (décision
+    d’adéquation de la Commission européenne du 10 juillet 2023).
+    <span class="a-completer">[À VÉRIFIER : pays de FormSubmit et adhésion de Cloudflare, FormSubmit et Google au Data Privacy Framework, sur dataprivacyframework.gov]</span>
+  </p>
   <p>
     Vous pouvez demander à consulter, corriger ou supprimer vos données à tout moment en écrivant à{" "}
     <a href={`mailto:${studio.email}`}>{studio.email}</a>. Vous pouvez aussi adresser une réclamation à{" "}

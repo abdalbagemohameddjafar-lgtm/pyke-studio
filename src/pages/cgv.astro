@@ -1,0 +1,106 @@
+---
+// Conditions générales de vente — STRUCTURE À COMPLÉTER ET À FAIRE RELIRE.
+// Les montants et délais viennent de src/data/tarifs.ts ; l'identité de src/data/studio.ts.
+// Tout ce qui est entre [crochets] est à rédiger : ne rien publier sans relecture.
+import PageSimple from '../layouts/PageSimple.astro';
+import { studio } from '../data/studio';
+import { maintenance } from '../data/tarifs';
+const { legal } = studio;
+const A = (texte = 'À COMPLÉTER') => `[${texte}]`;
+---
+
+<PageSimple
+  titre="Conditions générales de vente · Pyke Studio"
+  h1="Conditions générales de vente"
+  description="Conditions générales de vente de Pyke Studio : création de sites web à distance pour les professionnels."
+>
+  <p class="avertissement">À faire relire avant publication. Ce document est une structure : chaque partie entre crochets doit être rédigée et validée.</p>
+
+  <p>
+    Conditions applicables à compter du <span class="a-completer">{A('DATE À COMPLÉTER')}</span>.<br />
+    Prestataire : <strong>{studio.nom}</strong>, {legal.responsable}, {legal.statut}, SIRET {legal.siret}, {legal.adresse}.<br />
+    Contact : <a href={`mailto:${studio.email}`}>{studio.email}</a>.
+  </p>
+
+  <h2>1. Objet</h2>
+  <p>
+    Les présentes conditions encadrent la création de sites web et les prestations associées réalisées
+    entièrement à distance par {studio.nom} pour des clients professionnels (B2B).
+    <span class="a-completer">{A('À COMPLÉTER : liste des prestations couvertes')}</span>
+  </p>
+
+  <h2>2. Devis et commande</h2>
+  <p>
+    Chaque prestation fait l’objet d’un devis gratuit. La commande est ferme à la réception du devis
+    signé et de l’acompte.
+    <span class="a-completer">{A('À COMPLÉTER : durée de validité du devis, modalités de signature')}</span>
+  </p>
+
+  <h2>3. Prix</h2>
+  <p>
+    Les prix sont indiqués en euros, nets : {legal.tva}.
+    <span class="a-completer">{A('À COMPLÉTER : prix applicables, révision des tarifs, offre de lancement')}</span>
+  </p>
+
+  <h2>4. Paiement</h2>
+  <p>
+    Un acompte de 40 % est dû à la signature du devis. Le solde est dû à la mise en ligne du site.
+    <span class="a-completer">{A('À COMPLÉTER : moyens de paiement acceptés, délai de paiement')}</span>
+  </p>
+
+  <h2>5. Délais</h2>
+  <p>
+    Le site est mis en ligne sous 7 à 10 jours après réception de l’ensemble des contenus fournis par
+    le client.
+    <span class="a-completer">{A('À COMPLÉTER : conséquences d’un retard de transmission des contenus')}</span>
+  </p>
+
+  <h2>6. Contenus fournis par le client</h2>
+  <p>
+    Le client fournit les textes, photos, logos et informations nécessaires à son site. Il garantit en
+    détenir les droits et reste seul responsable de leur contenu.
+    <span class="a-completer">{A('À COMPLÉTER : formats attendus, garantie et responsabilité du client')}</span>
+  </p>
+
+  <h2>7. Corrections</h2>
+  <p>
+    Deux séries de corrections sont incluses dans chaque formule.
+    <span class="a-completer">{A('À COMPLÉTER : définition d’une série, tarif des corrections supplémentaires')}</span>
+  </p>
+
+  <h2>8. Propriété intellectuelle et cession des droits</h2>
+  <p>
+    <span class="a-completer">{A('À COMPLÉTER : droits cédés au client après paiement complet (étendue, durée, territoire), éléments conservés par le prestataire, mention « Site réalisé par Pyke Studio », utilisation en référence')}</span>
+  </p>
+
+  <h2>9. Nom de domaine</h2>
+  <p>
+    <span class="a-completer">{A('À COMPLÉTER : au nom de qui le nom de domaine est enregistré, transfert au client en fin de contrat')}</span>
+  </p>
+
+  <h2>10. Maintenance</h2>
+  <p>
+    La maintenance est proposée à {maintenance.prixMois} € par mois, avec un {maintenance.engagement}.
+    Elle comprend l’hébergement, le nom de domaine, les mises à jour, les sauvegardes et 30 minutes de
+    modifications par mois.
+    <span class="a-completer">{A('À COMPLÉTER : reconduction, résiliation et préavis, ce qui se passe à la fin du contrat (récupération du site et du nom de domaine)')}</span>
+  </p>
+
+  <h2>11. Retard de paiement</h2>
+  <p>
+    Tout retard de paiement entraîne des pénalités de retard ainsi qu’une indemnité forfaitaire de 40 €
+    pour frais de recouvrement (article L441-10 du Code de commerce).
+    <span class="a-completer">{A('À COMPLÉTER : taux des pénalités de retard')}</span>
+  </p>
+
+  <h2>12. Responsabilité</h2>
+  <p>
+    <span class="a-completer">{A('À COMPLÉTER : obligation de moyens, limites de responsabilité, disponibilité de l’hébergement, force majeure')}</span>
+  </p>
+
+  <h2>13. Droit applicable et litiges</h2>
+  <p>
+    Les présentes conditions sont soumises au droit français.
+    <span class="a-completer">{A('À COMPLÉTER : règlement amiable, tribunal compétent')}</span>
+  </p>
+</PageSimple>

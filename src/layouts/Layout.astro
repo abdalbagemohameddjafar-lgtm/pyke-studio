@@ -1,30 +1,40 @@
 ---
-import '@fontsource/outfit/400.css';
-import '@fontsource/outfit/500.css';
-import '@fontsource/outfit/600.css';
-import '@fontsource/outfit/800.css';
-import '../styles/global.css';
+// Gabarit commun à toutes les pages : en-tête, pied de page, polices, styles.
+// Design : src/styles/site.css (éditorial, papier chaud / encre / accent brique).
+import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/inter-tight/wght.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '../styles/site.css';
 import Logo from '../components/Logo.astro';
+import Telephone from '../components/Telephone.astro';
 import { studio } from '../data/studio';
 
 interface Props {
   titre?: string;
   description?: string;
+  /** true sur l'accueil : liens d'ancre courts (#formules) ; false ailleurs (/#formules). */
+  accueil?: boolean;
+  /** true : la page n'est pas indexée par les moteurs de recherche (merci, 404). */
+  noindex?: boolean;
 }
 
 const {
-  titre = 'Pyke Studio · Création de sites web pour commerçants',
-  description = 'Pyke Studio crée des sites web modernes pour les artisans et commerçants : fleuristes, tatoueurs, restaurants, boutiques. À partir de 390 €.',
+  titre = 'Pyke Studio · Sites web pour artisans et commerçants',
+  description = 'Pyke Studio crée des sites web pour les artisans et commerçants de toute la France : fleuristes, restaurants, tatoueurs, boutiques. Dès 390 €, en ligne en 7 à 10 jours.',
+  accueil = false,
+  noindex = false,
 } = Astro.props;
 
+const base = accueil ? '' : '/';
 const canonique = new URL(Astro.url.pathname, Astro.site);
 const annee = new Date().getFullYear();
 
 const liens = [
-  { href: '/#offres', texte: 'Offres' },
-  { href: '/#realisations', texte: 'Réalisations' },
-  { href: '/#methode', texte: 'Méthode' },
-  { href: '/tarifs', texte: 'Tarifs détaillés' },
+  { href: `${base}#metiers`, texte: 'Métiers' },
+  { href: `${base}#realisations`, texte: 'Réalisations' },
+  { href: `${base}#methode`, texte: 'Méthode' },
+  { href: `${base}#formules`, texte: 'Formules' },
+  { href: `${base}#questions`, texte: 'Questions' },
 ];
 
 const jsonLd = {
@@ -44,46 +54,45 @@ const jsonLd = {
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{titre}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonique} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/logo-pyke-studio.png" />
-    <meta name="theme-color" content="#0f2a35" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f4f1ea" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:title" content={titre} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonique} />
-    <meta property="og:image" content={new URL('/logo-pyke-studio.png', Astro.site)} />
+    <meta property="og:image" content={new URL('/og-pyke-studio.png', Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Pyke Studio, sites web pour artisans et commerçants" />
+    <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
-    <a class="passer" href="#contenu">Aller au contenu</a>
+    <a class="cache evitement" href="#contenu">Aller au contenu</a>
+
+    <!-- Les lignes de la grille 12 colonnes, en fond -->
+    <div class="lignes" aria-hidden="true">
+      <div class="wrap"><div class="grille"><span></span><span></span><span></span><span></span></div></div>
+    </div>
 
     <header class="entete">
-      <div class="conteneur entete-in">
-        <a href="/" class="entete-logo" aria-label="Pyke Studio, accueil">
-          <Logo />
-        </a>
-
-        <button
-          class="burger"
-          type="button"
-          aria-expanded="false"
-          aria-controls="menu"
-          aria-label="Ouvrir le menu"
-        >
-          <span></span><span></span><span></span>
-        </button>
-
-        <nav id="menu" class="menu" aria-label="Menu principal">
-          <ul>
-            {liens.map((l) => <li><a href={l.href}>{l.texte}</a></li>)}
-          </ul>
-          <a href="/#contact" class="bouton bouton-plein">Demander un devis</a>
+      <div class="wrap">
+        <a class="entete__logo" href={accueil ? '#top' : '/'} aria-label="Pyke Studio, accueil"><Logo /></a>
+        <nav class="entete__liens" id="menu" aria-label="Menu principal">
+          {liens.map((l) => <a href={l.href}>{l.texte}</a>)}
         </nav>
+        <a class="bouton" href={`${base}#devis`}>Demander un devis</a>
+        <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu">
+          <span></span><span></span>
+        </button>
       </div>
     </header>
 
@@ -91,58 +100,54 @@ const jsonLd = {
       <slot />
     </main>
 
-    <footer class="pied">
-      <div class="conteneur pied-in">
-        <div class="pied-marque">
-          <Logo />
-          <p>{studio.slogan}.<br />{studio.zone}.</p>
+    <footer class="pied" id="contact">
+      <div class="wrap">
+        <div class="pied__appel">
+          <h2 data-reveal>Parlons de votre commerce</h2>
+          <div class="pied__cote">
+            <p class="discret">Devis gratuit, réponse sous 48 h.</p>
+            <a class="bouton bouton--clair" href={`${base}#devis`}>Demander un devis <span class="fleche" aria-hidden="true">→</span></a>
+          </div>
         </div>
-        <div>
-          <h2 class="pied-titre">Contact</h2>
-          <ul>
-            <li><a href={`mailto:${studio.email}`}>{studio.email}</a></li>
-            <li><a href={studio.instagram} target="_blank" rel="noopener">Instagram {studio.pseudo}</a></li>
-            <li><a href={studio.tiktok} target="_blank" rel="noopener">TikTok {studio.pseudo}</a></li>
-          </ul>
+
+        <div class="pied__liens">
+          <div>
+            <p class="label">Le studio</p>
+            <a href={`${base}#metiers`}>Métiers</a>
+            <a href={`${base}#realisations`}>Réalisations</a>
+            <a href={`${base}#methode`}>Méthode</a>
+          </div>
+          <div>
+            <p class="label">Formules</p>
+            <a href={`${base}#formules`}>Formules et prix</a>
+            <a href="/tarifs">Tarifs détaillés</a>
+            <a href={`${base}#questions`}>Questions</a>
+          </div>
+          <div>
+            <p class="label">Contact</p>
+            <a href={`mailto:${studio.email}`}>E-mail</a>
+            <a href={studio.instagram} rel="noopener">Instagram</a>
+            <a href={studio.tiktok} rel="noopener">TikTok</a>
+            <Telephone />
+          </div>
+          <div>
+            <p class="label">Légal</p>
+            <a href="/mentions-legales">Mentions légales</a>
+            <a href="/cgv">Conditions générales de vente</a>
+          </div>
         </div>
-        <div>
-          <h2 class="pied-titre">Le studio</h2>
-          <ul>
-            {liens.map((l) => <li><a href={l.href}>{l.texte}</a></li>)}
-            <li><a href="/mentions-legales">Mentions légales</a></li>
-          </ul>
+
+        <p class="pied__nom" aria-hidden="true">Pyke Studio</p>
+
+        <div class="pied__legal mono discret">
+          <span>© {annee} {studio.nom} · {studio.legal.tva}</span>
+          <span>{studio.slogan}, partout en France, à distance.</span>
         </div>
-      </div>
-      <div class="conteneur pied-bas">
-        <p>© {annee} {studio.nom} · Micro-entreprise · {studio.legal.tva}</p>
       </div>
     </footer>
 
     <script>
-      // Menu mobile : ouverture/fermeture, touche Échap, blocage du défilement derrière.
-      const bouton = document.querySelector<HTMLButtonElement>('.burger')!;
-      const menu = document.getElementById('menu')!;
-
-      function basculer(ouvrir: boolean) {
-        bouton.setAttribute('aria-expanded', String(ouvrir));
-        bouton.setAttribute('aria-label', ouvrir ? 'Fermer le menu' : 'Ouvrir le menu');
-        menu.classList.toggle('ouvert', ouvrir);
-        document.documentElement.classList.toggle('menu-ouvert', ouvrir);
-      }
-
-      bouton.addEventListener('click', () => basculer(bouton.getAttribute('aria-expanded') !== 'true'));
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && menu.classList.contains('ouvert')) {
-          basculer(false);
-          bouton.focus();
-        }
-      });
-
-      menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => basculer(false)));
-
-      // Si on agrandit la fenêtre menu ouvert, on referme proprement.
-      matchMedia('(min-width: 900px)').addEventListener('change', (e) => e.matches && basculer(false));
+      import '../scripts/site.ts';
     </script>
   </body>
 </html>

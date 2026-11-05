@@ -4,7 +4,7 @@ interface Props {
   avecNom?: boolean;
   taille?: number;
 }
-const { avecNom = true, taille = 36 } = Astro.props;
+const { avecNom = true, taille = 28 } = Astro.props;
 ---
 
 <span class="logo">
@@ -21,7 +21,7 @@ const { avecNom = true, taille = 36 } = Astro.props;
       fill-rule="evenodd"
       d="M287 246H640C718 246 770 300 768 382C765 482 676 557 572 557H472L447 697L336 767L410 332ZM512 332H610C648 332 670 358 665 395C658 436 624 470 585 470H488Z"
     ></path>
-    <path fill="var(--turquoise)" d="M481 584H570C680 584 772 527 798 443C792 562 690 653 552 653H483Z"></path>
+    <path fill="var(--accent)" d="M481 584H570C680 584 772 527 798 443C792 562 690 653 552 653H483Z"></path>
   </svg>
   {
     avecNom && (
@@ -36,20 +36,23 @@ const { avecNom = true, taille = 36 } = Astro.props;
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.3em;
   }
   .logo-p {
     flex-shrink: 0;
+    width: 1.15em;
+    height: 1.15em;
   }
   .logo-nom {
-    font-weight: 800;
-    font-size: 1.35rem;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1em;
     letter-spacing: -0.02em;
     line-height: 1;
   }
   .logo-nom span {
-    font-weight: 500;
-    color: var(--turquoise);
+    font-weight: 400;
+    color: var(--encre-2);
     letter-spacing: 0;
   }
 </style>

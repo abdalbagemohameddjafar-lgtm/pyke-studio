@@ -7,7 +7,7 @@ import { studio } from '../data/studio';
 ---
 
 <form
-  class="formulaire"
+  class="form devis"
   name="contact"
   method="POST"
   action={`https://formsubmit.co/${studio.email}`}
@@ -21,66 +21,52 @@ import { studio } from '../data/studio';
     <label>Ne pas remplir : <input name="_honey" tabindex="-1" autocomplete="off" /></label>
   </p>
 
-  <div class="ligne">
-    <div class="champ">
-      <label for="nom">Votre nom <span aria-hidden="true">*</span></label>
-      <input id="nom" name="nom" type="text" autocomplete="name" required />
-    </div>
-    <div class="champ">
-      <label for="commerce">Votre commerce</label>
-      <input id="commerce" name="commerce" type="text" autocomplete="organization" placeholder="Ex. : fleuriste, salon de tatouage…" />
-    </div>
-  </div>
-
-  <div class="ligne">
-    <div class="champ">
-      <label for="email">E-mail <span aria-hidden="true">*</span></label>
-      <input id="email" name="email" type="email" autocomplete="email" required />
-    </div>
-    <div class="champ">
-      <label for="telephone">Téléphone</label>
-      <input id="telephone" name="telephone" type="tel" autocomplete="tel" />
-    </div>
-  </div>
-
-  <div class="champ">
-    <label for="formule">Formule qui vous intéresse</label>
-    <select id="formule" name="formule">
+  <label class="champ"><span class="label">Votre nom</span>
+    <input id="devis-nom" name="nom" type="text" autocomplete="name" required />
+  </label>
+  <label class="champ"><span class="label">Nom du commerce et ville (facultatif)</span>
+    <input name="commerce" type="text" autocomplete="organization" />
+  </label>
+  <label class="champ"><span class="label">E-mail</span>
+    <input name="email" type="email" autocomplete="email" required />
+  </label>
+  <label class="champ"><span class="label">Téléphone (facultatif)</span>
+    <input name="telephone" type="tel" autocomplete="tel" />
+  </label>
+  <label class="champ plein"><span class="label">Formule</span>
+    <select id="devis-formule" name="formule">
       <option value="Je ne sais pas encore">Je ne sais pas encore</option>
       {formules.map((f) => <option value={f.nom}>{f.nom}</option>)}
       <option value={boutique.nom}>{boutique.nom}</option>
     </select>
-  </div>
+  </label>
+  <label class="champ plein"><span class="label">Votre projet</span>
+    <textarea name="message" rows="4" required></textarea>
+  </label>
 
-  <div class="champ">
-    <label for="message">Votre projet <span aria-hidden="true">*</span></label>
-    <textarea id="message" name="message" rows="5" required placeholder="Parlez-nous de votre commerce et de ce que vous attendez de votre site."></textarea>
+  <div class="plein">
+    <button class="bouton" type="submit">Demander un devis <span class="fleche" aria-hidden="true">→</span></button>
   </div>
-
-  <p class="mention">
-    Les champs marqués * sont obligatoires. Vos informations servent uniquement à vous répondre
-    (voir les <a href="/mentions-legales#donnees">mentions légales</a>).
+  <p class="plein mono discret">
+    Vos informations servent uniquement à vous répondre
+    (<a class="lien" href="/mentions-legales#donnees">mentions légales</a>).
   </p>
-
-  <button class="bouton bouton-plein" type="submit">Envoyer ma demande</button>
-  <p class="statut" role="status" aria-live="polite"></p>
+  <p class="plein statut" role="status" aria-live="polite"></p>
 </form>
 
-<script>
-  // Envoi sans quitter la page (si JavaScript est désactivé, le formulaire
-  // fonctionne quand même et redirige vers /merci).
-  const form = document.querySelector<HTMLFormElement>('form.formulaire');
+<script define:vars={{ email: studio.email }}>
+  // Envoi sans quitter la page (FormSubmit, réponse JSON). Sans JavaScript, le formulaire
+  // est envoyé normalement à FormSubmit, qui redirige vers /merci (_next).
+  const form = document.querySelector('form.devis');
   if (form) {
-    const statut = form.querySelector<HTMLElement>('.statut')!;
-    const bouton = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
-
+    const statut = form.querySelector('.statut');
+    const bouton = form.querySelector('button[type=submit]');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       bouton.disabled = true;
-      statut.className = 'statut';
       statut.textContent = 'Envoi en cours…';
       try {
-        const rep = await fetch(form.dataset.ajax!, {
+        const rep = await fetch(form.dataset.ajax, {
           method: 'POST',
           headers: { Accept: 'application/json' },
           body: new FormData(form),
@@ -88,12 +74,9 @@ import { studio } from '../data/studio';
         const json = await rep.json().catch(() => ({}));
         if (!rep.ok || String(json.success) !== 'true') throw new Error(String(rep.status));
         form.reset();
-        statut.classList.add('ok');
-        statut.textContent = 'Merci ! Votre message est bien envoyé. Nous vous répondons sous 48 h.';
+        statut.textContent = 'Merci, votre demande est bien envoyée. Nous vous répondons sous 48 h.';
       } catch {
-        statut.classList.add('erreur');
-        statut.textContent =
-          "Oups, l'envoi n'a pas fonctionné. Réessayez, ou écrivez-nous directement à pykestudio.contact@gmail.com.";
+        statut.textContent = `L’envoi n’a pas fonctionné. Réessayez, ou écrivez-nous à ${email}.`;
       } finally {
         bouton.disabled = false;
       }
@@ -102,100 +85,28 @@ import { studio } from '../data/studio';
 </script>
 
 <style>
-  .formulaire {
-    display: grid;
-    gap: 18px;
-    padding: clamp(22px, 4vw, 36px);
-    background: var(--blanc);
-    color: var(--texte);
-    border-radius: var(--rayon);
-    box-shadow: var(--ombre);
-  }
-  .ligne {
-    display: grid;
-    gap: 18px;
-  }
-  @media (min-width: 620px) {
-    .ligne {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  .champ {
-    display: grid;
-    gap: 6px;
-  }
-  label {
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-  label span {
-    color: var(--turquoise-fonce);
-  }
-  input,
-  select,
-  textarea {
-    width: 100%;
-    font: inherit;
-    font-size: 1rem;
-    color: var(--texte);
-    padding: 12px 14px;
-    min-height: 48px;
-    border: 1.5px solid var(--bord);
-    border-radius: var(--rayon-petit);
-    background: var(--fond);
-    transition:
-      border-color 0.15s ease,
-      background-color 0.15s ease;
-  }
-  textarea {
-    resize: vertical;
-  }
-  input:focus,
-  select:focus,
-  textarea:focus {
-    outline: none;
-    border-color: var(--turquoise);
-    background: var(--blanc);
-    box-shadow: 0 0 0 3px rgba(32, 184, 168, 0.2);
-  }
-  input::placeholder,
-  textarea::placeholder {
-    color: #7d8f96;
-  }
-  .mention {
-    font-size: 0.875rem;
-    color: var(--gris);
-  }
-  .mention a {
-    color: var(--turquoise-fonce);
-  }
-  button {
-    justify-self: start;
-  }
-  button:disabled {
-    opacity: 0.6;
-    cursor: wait;
-    transform: none;
-  }
-  .statut:empty {
+  .statut:empty,
+  .piege {
     display: none;
   }
   .statut {
-    padding: 12px 14px;
-    border-radius: var(--rayon-petit);
-    background: var(--fond);
     font-weight: 500;
+    transition:
+      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    @starting-style {
+      opacity: 0;
+      transform: translateY(4px);
+    }
   }
-  .statut.ok {
-    background: #e2f6f3;
-    color: #075b53;
+  @media (prefers-reduced-motion: reduce) {
+    .statut {
+      transition: opacity 200ms ease;
+      transform: none;
+    }
   }
-  .statut.erreur {
-    background: #fde8e6;
-    color: #8a1f12;
-  }
-  .piege {
-    position: absolute;
-    left: -9999px;
+  button:disabled {
+    opacity: 0.6;
+    cursor: progress;
   }
 </style>

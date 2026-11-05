@@ -1,66 +1,23 @@
 ---
-// Mise en page des pages de texte (mentions légales, merci, 404).
+// Mise en page des pages de texte (tarifs détaillés, mentions légales, CGV, merci, 404).
 import Layout from './Layout.astro';
 
 interface Props {
   titre: string;
   h1: string;
   description?: string;
+  noindex?: boolean;
 }
-const { titre, h1, description } = Astro.props;
+const { titre, h1, description, noindex = false } = Astro.props;
 ---
 
-<Layout titre={titre} description={description}>
-  <section class="haut">
-    <div class="conteneur">
-      <h1>{h1}</h1>
+<Layout titre={titre} description={description} noindex={noindex}>
+  <div class="page-texte">
+    <div class="wrap">
+      <div class="contenu">
+        <h1>{h1}</h1>
+        <slot />
+      </div>
     </div>
-  </section>
-  <div class="conteneur texte">
-    <slot />
   </div>
 </Layout>
-
-<style>
-  .haut {
-    background: var(--petrole);
-    color: var(--clair);
-    padding-block: clamp(40px, 6vw, 72px);
-  }
-  .haut h1 {
-    font-size: clamp(1.9rem, 4.5vw, 2.8rem);
-    font-weight: 800;
-  }
-  .texte {
-    max-width: 780px;
-    padding-block: clamp(40px, 6vw, 72px) clamp(64px, 9vw, 104px);
-  }
-  .texte :global(h2) {
-    font-size: 1.35rem;
-    font-weight: 800;
-    margin: 40px 0 12px;
-  }
-  .texte :global(h2:first-child) {
-    margin-top: 0;
-  }
-  .texte :global(p + p) {
-    margin-top: 12px;
-  }
-  .texte :global(p),
-  .texte :global(li) {
-    color: var(--gris);
-  }
-  .texte :global(strong) {
-    color: var(--texte);
-  }
-  .texte :global(a) {
-    color: var(--turquoise-fonce);
-    overflow-wrap: anywhere;
-  }
-  .texte :global(ul) {
-    padding-left: 20px;
-    display: grid;
-    gap: 6px;
-    margin: 10px 0 0;
-  }
-</style>
