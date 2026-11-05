@@ -1,5 +1,6 @@
 ---
 import PageSimple from '../layouts/PageSimple.astro';
+import FormuleExemple from '../components/FormuleExemple.astro';
 import { studio } from '../data/studio';
 import {
   validite,
@@ -25,12 +26,14 @@ import {
 
   {formules.map((f) => (
     <>
-      <h2>{f.nom}, {euros(f.prix)}{prixRemise(f.prix) !== null && <span class="accent"> · {euros(prixRemise(f.prix)!)} avec l’offre de lancement</span>}</h2>
+      <h2 class="tarifs-formule" id={`formule-${f.slug}`}>{f.nom}, {euros(f.prix)}{prixRemise(f.prix) !== null && <span class="accent"> · {euros(prixRemise(f.prix)!)} avec l’offre de lancement</span>}</h2>
       <p>Idéal pour : {f.ideal}</p>
       <ul>
         {f.detail.map((d) => <li>{d}</li>)}
         {inclusPartout.map((d) => <li>{d}</li>)}
       </ul>
+      <div class="tarifs-exemple"><FormuleExemple slug={f.slug} /></div>
+      <p><a class="lien" href={`/?formule=${f.slug}#devis`}>Choisir la formule {f.nom} <span class="fleche" aria-hidden="true">→</span></a></p>
     </>
   ))}
 
@@ -61,3 +64,13 @@ import {
     <a href="/#devis" class="bouton">Demander un devis</a>
   </div>
 </PageSimple>
+
+<script>
+  // ?formule=vitrine (ou essentiel, vitrine-plus) : on amène le visiteur sur la bonne formule.
+  const slug = new URLSearchParams(location.search).get('formule');
+  const titre = slug ? document.getElementById(`formule-${slug}`) : null;
+  if (titre) {
+    titre.setAttribute('data-choisie', '');
+    titre.scrollIntoView({ block: 'start' });
+  }
+</script>

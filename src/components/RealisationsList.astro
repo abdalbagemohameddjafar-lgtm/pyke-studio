@@ -1,0 +1,120 @@
+---
+// Liste typographique géante des démos, avec une vignette-pilule dans chaque ligne
+// (à droite du nom, puis à gauche, selon « positionImage »). Données : src/data/demos.ts
+import { demos } from '../data/demos';
+import { formules } from '../data/tarifs';
+
+const nomFormule = (slug: string) => formules.find((f) => f.slug === slug)?.nom ?? slug;
+---
+
+<ul class="demos-liste" role="list">
+  {demos.map((d) => (
+    <li>
+      <a class:list={['demo-ligne', `demo-ligne--${d.positionImage}`]} href={d.url} target="_blank" rel="noopener">
+        <span class="demo-ligne__titre">
+          <span class="demo-ligne__nom">{d.nom}</span>
+          <span class="demo-ligne__pilule">
+            <img
+              src={d.imagePetite}
+              srcset={`${d.imagePetite} 720w, ${d.image} 1440w`}
+              sizes="(min-width: 768px) 20vw, 30vw"
+              width="720"
+              height="400"
+              alt={d.alt}
+              loading="lazy"
+              decoding="async"
+              style={`object-position: ${d.cadrage}`}
+            />
+          </span>
+        </span>
+        <span class="demo-ligne__meta mono">
+          {d.secteur} · Formule {nomFormule(d.formule)}<span class="cache"> (nouvel onglet)</span>
+        </span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .demos-liste {
+    display: grid;
+    gap: clamp(20px, 3vw, 40px);
+    text-align: center;
+  }
+  .demo-ligne {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--encre);
+  }
+  .demo-ligne__titre {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.06em 0.22em;
+    font-family: var(--serif);
+    font-optical-sizing: auto;
+    font-weight: 320;
+    font-size: clamp(2.6rem, 0.8rem + 8.4vw, 9.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
+  /* Image à gauche du nom : on inverse simplement l'ordre visuel */
+  .demo-ligne--gauche .demo-ligne__pilule {
+    order: -1;
+  }
+  .demo-ligne__nom {
+    transition: color 300ms ease;
+  }
+  .demo-ligne__pilule {
+    display: block;
+    flex: none;
+    width: 2.1em;
+    height: 0.82em;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--encre);
+    background: #fff;
+    transition: transform 500ms var(--ease);
+  }
+  .demo-ligne__pilule img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .demo-ligne__meta {
+    color: var(--encre-2);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .demo-ligne:hover .demo-ligne__nom {
+      color: var(--accent);
+    }
+    .demo-ligne:hover .demo-ligne__pilule {
+      transform: scale(1.08);
+    }
+  }
+  .demo-ligne:focus-visible {
+    outline-offset: 8px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .demo-ligne__nom,
+    .demo-ligne__pilule {
+      transition: none;
+    }
+    .demo-ligne:hover .demo-ligne__pilule {
+      transform: none;
+    }
+  }
+  @media (max-width: 599px) {
+    .demo-ligne__titre {
+      font-size: clamp(1.9rem, 0.2rem + 8.4vw, 2.8rem);
+      flex-wrap: nowrap;
+    }
+    .demo-ligne__pilule {
+      width: 1.8em;
+      height: 0.78em;
+    }
+  }
+</style>

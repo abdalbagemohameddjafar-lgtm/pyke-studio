@@ -1,0 +1,88 @@
+---
+// Contenu « Exemple de site » d'une formule : la démo correspondante (vignette-pilule, nom,
+// phrase, lien), ou un message sobre si la formule n'a pas encore de démo.
+// Utilisé sur l'accueil (section 04, bloc qui change selon la formule choisie) et sur /tarifs.
+// Données : src/data/demos.ts
+import { demoPourFormule, sansDemo } from '../data/demos';
+import { formules } from '../data/tarifs';
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+const d = demoPourFormule(slug);
+const nomFormule = formules.find((f) => f.slug === slug)?.nom ?? slug;
+---
+
+<div class="exemple">
+  <p class="label exemple__label">Exemple de site · Formule {nomFormule}</p>
+  {d ? (
+    <div class="exemple__corps">
+      <a class="exemple__pilule" href={d.url} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+        <img src={d.imagePetite} width="720" height="400" alt="" loading="lazy" decoding="async" style={`object-position: ${d.cadrage}`} />
+      </a>
+      <div class="exemple__texte">
+        <p class="exemple__nom">{d.nom} <span class="mono discret">· {d.secteur}</span></p>
+        <p class="discret">{d.phraseFormule}</p>
+        <a class="lien" href={d.url} target="_blank" rel="noopener">Voir le site <span class="fleche" aria-hidden="true">→</span><span class="cache"> {d.nom} (nouvel onglet)</span></a>
+      </div>
+    </div>
+  ) : (
+    <p class="exemple__vide discret">{sansDemo[slug] ?? 'Exemple à venir.'}</p>
+  )}
+</div>
+
+<style>
+  .exemple {
+    display: grid;
+    gap: 14px;
+  }
+  .exemple__corps {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2.5vw, 32px);
+  }
+  .exemple__pilule {
+    flex: none;
+    display: block;
+    width: clamp(120px, 16vw, 220px);
+    aspect-ratio: 2.4;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--encre);
+    background: #fff;
+  }
+  .exemple__pilule img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .exemple__texte {
+    display: grid;
+    gap: 6px;
+    justify-items: start;
+  }
+  .exemple__nom {
+    font-family: var(--serif);
+    font-optical-sizing: auto;
+    font-weight: 420;
+    font-size: clamp(1.35rem, 1.1rem + 0.6vw, 1.7rem);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .exemple__nom .mono {
+    letter-spacing: 0.02em;
+  }
+  .exemple__vide {
+    max-width: 52ch;
+  }
+  @media (max-width: 479px) {
+    .exemple__corps {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .exemple__pilule {
+      width: 200px;
+    }
+  }
+</style>

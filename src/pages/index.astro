@@ -5,10 +5,11 @@ import Layout from '../layouts/Layout.astro';
 import Formulaire from '../components/Formulaire.astro';
 import Telephone from '../components/Telephone.astro';
 import { studio } from '../data/studio';
+import RealisationsList from '../components/RealisationsList.astro';
+import FeaturedDemo from '../components/FeaturedDemo.astro';
+import FormuleExemple from '../components/FormuleExemple.astro';
 import { formules, boutique, maintenance, offreLancement, prixRemise, euros } from '../data/tarifs';
 
-// Adresse du site de démonstration Maison Ambre (hébergé sur Cloudflare Pages) : à changer ici seulement.
-const MAISON_AMBRE = 'https://maison-ambre.pages.dev';
 const { fondateur } = studio;
 
 const metiers = [
@@ -42,6 +43,9 @@ const deux = (n: number) => String(n).padStart(2, '0');
 /** 390 → « 390 » (le « € » est composé à part pour la typo des prix) */
 const montant = (n: number) => euros(n).replace(/\s?€$/, '');
 const estPlaceholder = (t: string) => t.startsWith('[');
+// Exemple affiché par défaut sous les formules : celui de la formule « Recommandé »
+const formuleDefaut = formules.find((f) => f.vedette) ?? formules[0];
+const rangDefaut = formules.indexOf(formuleDefaut);
 ---
 
 <Layout accueil>
@@ -99,35 +103,17 @@ const estPlaceholder = (t: string) => t.startsWith('[');
     </div>
   </section>
 
-  <!-- 02 · RÉALISATIONS : captures ordinateur, et captures téléphone sous 600 px -->
-  <section class="section" id="realisations" aria-labelledby="realisations-h">
+  <!-- 02 · RÉALISATIONS : liste des démos (données : src/data/demos.ts) -->
+  <section class="section realisations" id="realisations" aria-labelledby="realisations-h">
     <div class="wrap">
-      <div class="section__tete">
-        <p class="section__num label">02 — Réalisations</p>
-        <h2 id="realisations-h" data-reveal>Maison Ambre, notre site de démonstration</h2>
-        <p class="chapo">Une parfumerie fictive : 73 parfums, des filtres et un test olfactif.</p>
-        <p><a class="lien" href={MAISON_AMBRE} target="_blank" rel="noopener">Voir le site <span class="fleche" aria-hidden="true">→</span><span class="cache"> (nouvel onglet)</span></a></p>
+      <p class="section__num label">02 — Réalisations</p>
+      <h2 id="realisations-h" class="label realisations__surtitre">Nos sites de démonstration</h2>
+      <RealisationsList />
+      <div class="realisations__reperes mono discret" aria-hidden="true">
+        <span>02</span>
+        <span>Voir les démos</span>
       </div>
-      <div class="grille duo">
-        <a href={`${MAISON_AMBRE}/#collection`} target="_blank" rel="noopener">
-          <div class="capture">
-            <picture>
-              <source media="(max-width: 599px)" srcset="/assets/img/ma-collection-mobile.webp" width="390" height="520" />
-              <img src="/assets/img/ma-collection-1256.webp" srcset="/assets/img/ma-collection-640.webp 640w, /assets/img/ma-collection-1256.webp 1256w" sizes="(min-width: 768px) 58vw, 100vw" width="1256" height="942" alt="Collection de parfums du site Maison Ambre, avec filtres et tri" loading="lazy" />
-            </picture>
-          </div>
-          <p class="legende mono discret"><span>La collection<span class="cache"> (nouvel onglet)</span></span><span aria-hidden="true">↗</span></p>
-        </a>
-        <a href={`${MAISON_AMBRE}/parfums/ambre-dore/`} target="_blank" rel="noopener">
-          <div class="capture">
-            <picture>
-              <source media="(max-width: 599px)" srcset="/assets/img/ma-fiche-mobile.webp" width="390" height="520" />
-              <img src="/assets/img/ma-fiche-1256.webp" srcset="/assets/img/ma-fiche-640.webp 640w, /assets/img/ma-fiche-1256.webp 1256w" sizes="(min-width: 768px) 42vw, 100vw" width="1256" height="942" alt="Fiche du parfum Ambre Doré sur le site Maison Ambre" loading="lazy" />
-            </picture>
-          </div>
-          <p class="legende mono discret"><span>Fiche parfum<span class="cache"> (nouvel onglet)</span></span><span aria-hidden="true">↗</span></p>
-        </a>
-      </div>
+      <FeaturedDemo />
     </div>
   </section>
 
@@ -152,7 +138,7 @@ const estPlaceholder = (t: string) => t.startsWith('[');
   </section>
 
   <!-- 04 · FORMULES -->
-  <section class="section" id="formules" aria-labelledby="formules-h">
+  <section class="section section--formules" id="formules" aria-labelledby="formules-h">
     <div class="wrap">
       <div class="section__tete">
         <p class="section__num label">04 — Formules</p>
@@ -160,10 +146,10 @@ const estPlaceholder = (t: string) => t.startsWith('[');
         <p class="chapo">Prix nets, TVA non applicable.</p>
       </div>
       <div class="formules">
-        {formules.map((f) => {
+        {formules.map((f, i) => {
           const remise = prixRemise(f.prix);
           return (
-            <article class="formule">
+            <article class="formule" data-formule-carte={f.slug} data-choisie={f === formuleDefaut ? '' : undefined} style={`--ordre: ${i * 2}`}>
               <div class="formule__tete">
                 <h3>{f.nom}</h3>
                 {f.vedette && <span class="label accent">Recommandé</span>}
@@ -183,10 +169,22 @@ const estPlaceholder = (t: string) => t.startsWith('[');
                   {f.points.map((x) => <li>{x}</li>)}
                 </ul>
               </div>
-              <a class="lien" href={`?formule=${f.slug}#devis`} data-formule={f.nom}>Choisir cette formule <span class="fleche" aria-hidden="true">→</span></a>
+              <div class="formule__actions">
+                <a class="bouton" href={`?formule=${f.slug}#devis`} data-formule={f.nom}>Choisir cette formule <span class="fleche" aria-hidden="true">→</span></a>
+                <button class="formule__exemple-btn mono" type="button" data-exemple-choix={f.slug} aria-pressed={f === formuleDefaut ? 'true' : 'false'} aria-controls="formule-exemple">
+                  Voir l’exemple<span class="cache"> de la formule {f.nom}</span>
+                </button>
+              </div>
             </article>
           );
         })}
+        <!-- Exemple de site : celui de la formule choisie (par défaut « Recommandé ») -->
+        <div class="formules__exemple" id="formule-exemple" aria-live="polite" style={`--ordre-mobile: ${rangDefaut * 2 + 1}`}>
+          <FormuleExemple slug={formuleDefaut.slug} />
+        </div>
+        {formules.map((f) => (
+          <template data-exemple={f.slug}><FormuleExemple slug={f.slug} /></template>
+        ))}
       </div>
       <div class="offres-plus">
         <p>

@@ -124,3 +124,43 @@ const demande = new URLSearchParams(location.search).get('formule');
 if (demande && choisirFormule(parSlug.get(demande) || demande.replace(/-plus$/, '+'))) {
   champNom?.focus({ preventScroll: true });
 }
+
+// ---------- Formules : « Exemple de site » qui suit la formule choisie ----------
+// Sans JavaScript, l'exemple de la formule « Recommandé » est déjà dans le HTML.
+const blocExemple = document.querySelector<HTMLElement>('#formule-exemple');
+const boutonsExemple = [...document.querySelectorAll<HTMLButtonElement>('[data-exemple-choix]')];
+const cartes = [...document.querySelectorAll<HTMLElement>('[data-formule-carte]')];
+
+function afficherExemple(slug: string, animer = true) {
+  const modele = document.querySelector<HTMLTemplateElement>(`template[data-exemple="${slug}"]`);
+  const rang = cartes.findIndex((c) => c.dataset.formuleCarte === slug);
+  if (!blocExemple || !modele || rang < 0) return;
+  boutonsExemple.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.exempleChoix === slug)));
+  cartes.forEach((c) => c.toggleAttribute('data-choisie', c.dataset.formuleCarte === slug));
+  blocExemple.style.setProperty('--ordre-mobile', String(rang * 2 + 1));
+  blocExemple.replaceChildren(modele.content.cloneNode(true));
+  if (animer && !calme) {
+    blocExemple.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], {
+      duration: 320,
+      easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+    });
+  }
+}
+
+boutonsExemple.forEach((b) => b.addEventListener('click', () => afficherExemple(b.dataset.exempleChoix ?? '')));
+// Clic n'importe où sur la carte (hors liens et boutons) : même effet
+cartes.forEach((c) =>
+  c.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a, button')) return;
+    afficherExemple(c.dataset.formuleCarte ?? '');
+  }),
+);
+// Clic sur « Choisir cette formule » : l'exemple suit aussi
+document.querySelectorAll<HTMLAnchorElement>('a[data-formule]').forEach((a) =>
+  a.addEventListener('click', () => {
+    const slug = new URL(a.href).searchParams.get('formule');
+    if (slug) afficherExemple(slug, false);
+  }),
+);
+// Arrivée avec ?formule=… : présélection de l'exemple
+if (demande) afficherExemple(demande, false);

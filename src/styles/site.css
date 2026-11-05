@@ -1151,3 +1151,95 @@ h3 {
     justify-self: end;
   }
 }
+
+/* ---------- 02 · Réalisations : liste typographique des démos ---------- */
+.realisations__surtitre {
+  margin: clamp(24px, 3vw, 40px) 0 clamp(28px, 4vw, 48px);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+.realisations__reperes {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: clamp(32px, 4.6vw, 64px);
+}
+/* Espacements réduits d'un tiers, pour ces sections seulement (la variable globale .section ne change pas) */
+.section.realisations {
+  padding-block: clamp(54px, 7.4vw, 107px);
+}
+.section--formules {
+  padding-bottom: clamp(54px, 7.4vw, 107px);
+}
+
+/* ---------- 04 · Formules : exemple de site lié à la formule choisie ---------- */
+/* Actions en bas de chaque carte, même agencement sur les 3 : le devis d'abord, l'exemple ensuite */
+.formule__actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+/* « Voir l'exemple » : action secondaire, petit lien texte façon label */
+.formule__exemple-btn {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--encre-2);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  cursor: pointer;
+  transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+.formule__exemple-btn:hover {
+  color: var(--encre);
+  text-decoration-color: currentColor;
+}
+.formule__exemple-btn[aria-pressed='true'] {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+.formule[data-choisie] {
+  background: linear-gradient(var(--papier-2), var(--papier-2)) 0 0 / 100% 3px no-repeat;
+}
+.formules__exemple {
+  grid-column: 1 / -1;
+  order: 99;
+  padding-block: clamp(24px, 3vw, 36px) clamp(20px, 2.4vw, 28px);
+  border-top: 1px solid var(--filet);
+}
+@media (max-width: 639px) {
+  /* Mobile : l'exemple se place juste sous la carte choisie */
+  .formules .formule {
+    order: var(--ordre);
+  }
+  .formules__exemple {
+    order: var(--ordre-mobile);
+    padding-top: 20px;
+  }
+}
+
+/* ---------- Page Tarifs : exemple sous chaque formule ---------- */
+.tarifs-exemple {
+  margin: 20px 0 8px;
+  padding: 20px 0;
+  border-top: 1px solid var(--filet);
+  border-bottom: 1px solid var(--filet);
+}
+.tarifs-formule:target,
+.tarifs-formule[data-choisie] {
+  scroll-margin-top: calc(var(--nav) + 24px);
+}
+.tarifs-formule[data-choisie] {
+  color: var(--accent);
+}
