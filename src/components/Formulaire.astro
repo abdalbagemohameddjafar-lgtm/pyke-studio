@@ -1,24 +1,30 @@
 ---
-// Formulaire de contact, relié à FormSubmit (formsubmit.co) : les messages
-// arrivent directement par e-mail à l'adresse de studio.email.
-// Le tout premier envoi déclenche un e-mail d'activation à cliquer une seule fois.
+// Formulaire de demande de devis, envoyé via Web3Forms (web3forms.com).
+// - La clé d'accès est dans le fichier .env (PUBLIC_WEB3FORMS_KEY) et dans Cloudflare Pages.
+//   L'adresse qui reçoit les messages est réglée sur le compte Web3Forms, pas dans le code.
+// - Sans clé (ou si le service ne répond pas), on ne fait JAMAIS semblant d'avoir envoyé :
+//   on ouvre l'application e-mail du visiteur avec sa demande déjà rédigée.
 import { formules, boutique } from '../data/tarifs';
 import { studio } from '../data/studio';
+
+const cle = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 ---
 
 <form
   class="form devis"
   name="contact"
   method="POST"
-  action={`https://formsubmit.co/${studio.email}`}
-  data-ajax={`https://formsubmit.co/ajax/${studio.email}`}
+  action={cle ? 'https://api.web3forms.com/submit' : `mailto:${studio.email}`}
+  enctype={cle ? undefined : 'text/plain'}
+  data-cle={cle}
 >
-  <input type="hidden" name="_subject" value="Nouvelle demande depuis pykestudio.fr" />
-  <input type="hidden" name="_next" value={`${studio.url}/merci`} />
-  <input type="hidden" name="_template" value="table" />
-  <input type="hidden" name="_captcha" value="false" />
+  {cle && <input type="hidden" name="access_key" value={cle} />}
+  <input type="hidden" name="subject" value="Nouvelle demande depuis pykestudio.fr" />
+  <input type="hidden" name="from_name" value="Site pykestudio.fr" />
+  <input type="hidden" name="redirect" value={`${studio.url}/merci`} />
+  <!-- Piège à robots (honeypot Web3Forms) : case invisible, seuls les robots la cochent -->
   <p class="piege" aria-hidden="true">
-    <label>Ne pas remplir : <input name="_honey" tabindex="-1" autocomplete="off" /></label>
+    <label>Ne pas cocher : <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" /></label>
   </p>
 
   <label class="champ"><span class="label">Votre nom</span>
@@ -55,28 +61,56 @@ import { studio } from '../data/studio';
 </form>
 
 <script define:vars={{ email: studio.email }}>
-  // Envoi sans quitter la page (FormSubmit, réponse JSON). Sans JavaScript, le formulaire
-  // est envoyé normalement à FormSubmit, qui redirige vers /merci (_next).
+  // Envoi sans quitter la page. La validation (champs requis, format de l'e-mail) est faite
+  // par le navigateur avant cet événement.
   const form = document.querySelector('form.devis');
   if (form) {
     const statut = form.querySelector('.statut');
     const bouton = form.querySelector('button[type=submit]');
+    const cle = form.dataset.cle || '';
+
+    /** Plan B : ouvre l'application e-mail du visiteur avec la demande déjà rédigée. */
+    const parEmail = (raison) => {
+      const d = new FormData(form);
+      const corps = [
+        `Nom : ${d.get('nom')}`,
+        `Commerce et ville : ${d.get('commerce') || '—'}`,
+        `E-mail : ${d.get('email')}`,
+        `Téléphone : ${d.get('telephone') || '—'}`,
+        `Formule : ${d.get('formule')}`,
+        '',
+        String(d.get('message') || ''),
+      ].join('\n');
+      const sujet = encodeURIComponent(`Demande de devis – ${d.get('nom')}`);
+      location.href = `mailto:${email}?subject=${sujet}&body=${encodeURIComponent(corps)}`;
+      statut.replaceChildren(
+        `${raison ? raison + ' ' : ''}Votre application e-mail s’ouvre avec votre demande déjà rédigée : il ne reste qu’à l’envoyer. Sinon, écrivez-nous à `,
+        Object.assign(document.createElement('a'), { className: 'lien', href: `mailto:${email}`, textContent: email }),
+        '.',
+      );
+    };
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      // Piège coché = robot : on ne fait rien
+      if (form.elements.namedItem('botcheck')?.checked) return;
+      if (!cle) return parEmail('');
       bouton.disabled = true;
       statut.textContent = 'Envoi en cours…';
       try {
-        const rep = await fetch(form.dataset.ajax, {
+        const donnees = Object.fromEntries(new FormData(form));
+        delete donnees.redirect; // utile seulement sans JavaScript
+        const rep = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
-          headers: { Accept: 'application/json' },
-          body: new FormData(form),
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(donnees),
         });
         const json = await rep.json().catch(() => ({}));
-        if (!rep.ok || String(json.success) !== 'true') throw new Error(String(rep.status));
+        if (!rep.ok || json.success !== true) throw new Error(String(rep.status));
         form.reset();
         statut.textContent = 'Merci, votre demande est bien envoyée. Nous vous répondons sous 48 h.';
       } catch {
-        statut.textContent = `L’envoi n’a pas fonctionné. Réessayez, ou écrivez-nous à ${email}.`;
+        parEmail('L’envoi automatique n’a pas fonctionné.');
       } finally {
         bouton.disabled = false;
       }

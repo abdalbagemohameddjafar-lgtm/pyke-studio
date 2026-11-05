@@ -2,3 +2,7 @@
 node_modules/
 dist/
 .astro/
+
+# variables d’environnement (clé Web3Forms)
+.env
+.env.production
