@@ -899,6 +899,8 @@ h3 {
 .pied__liens a {
   text-decoration: none;
   width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
   transition: background-size 300ms var(--ease);
 }
@@ -1109,34 +1111,10 @@ h3 {
   padding-block: 14px;
   border-bottom: 1px solid var(--filet);
 }
-.contacts .a-completer,
 .contacts .lien {
   justify-self: start;
   width: fit-content;
   overflow-wrap: anywhere;
-}
-
-/* ---------- Emplacements à compléter (visibles exprès) ---------- */
-.a-completer {
-  font-family: var(--mono);
-  font-size: 0.85em;
-  letter-spacing: 0.02em;
-  color: var(--accent);
-  background: rgb(194 65 12 / 0.08);
-  outline: 1px dashed rgb(194 65 12 / 0.5);
-  padding: 0.1em 0.35em;
-}
-.pied .a-completer {
-  color: #f0a27a;
-  background: rgb(240 162 122 / 0.1);
-}
-.avertissement {
-  font-family: var(--mono);
-  font-size: 14px;
-  padding: 14px 16px;
-  margin-bottom: 32px;
-  border: 1px solid var(--accent);
-  color: var(--accent);
 }
 
 /* ---------- Réalisations sur téléphone : captures mobiles en portrait ---------- */

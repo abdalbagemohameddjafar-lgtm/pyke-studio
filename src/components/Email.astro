@@ -1,0 +1,13 @@
+---
+// Adresse e-mail cliquable, affichée EN CLAIR.
+// Cloudflare remplace sinon l'adresse par « [email protected] » + un script (Email Obfuscation) :
+// les balises <!--email_off--> lui demandent de ne pas y toucher.
+import { EMAIL } from '../data/studio';
+interface Props {
+  class?: string;
+}
+const { class: classe } = Astro.props;
+const html = `<!--email_off--><a${classe ? ` class="${classe}"` : ''} href="mailto:${EMAIL}">${EMAIL}</a><!--/email_off-->`;
+---
+
+<Fragment set:html={html} />

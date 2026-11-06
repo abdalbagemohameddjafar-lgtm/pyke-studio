@@ -11,8 +11,9 @@ import {
   maintenance,
   conditions,
   offreLancement,
+  placesRestantes,
+  PRIX_BARRE,
   prixRemise,
-  PRIX_A_COMPLETER,
   euros,
 } from '../data/tarifs';
 ---
@@ -22,7 +23,10 @@ import {
   h1="Tarifs détaillés"
   description="Tarifs Pyke Studio : site Essentiel 390 €, Vitrine 690 €, Vitrine+ 990 €, boutique en ligne dès 1 500 €. Maintenance 29 € par mois. TVA non applicable."
 >
-  <p>{validite}. Prix nets : {studio.legal.tva}.{offreLancement && ` ${offreLancement}.`}</p>
+  <p>{validite}. Prix nets : {studio.legal.tva}. Les prestations de Pyke Studio sont réservées aux professionnels (commerçants, artisans, indépendants).</p>
+  {offreLancement && (
+    <p><strong>{offreLancement}</strong> ({placesRestantes}). Non cumulable. Le premier prix indiqué pour chaque formule est le {PRIX_BARRE.charAt(0).toLowerCase() + PRIX_BARRE.slice(1)}.</p>
+  )}
 
   {formules.map((f) => (
     <>
@@ -43,8 +47,8 @@ import {
 
   <h2>Options</h2>
   <ul class="rows" role="list">
-    {options.map((o) => (
-      <li><span class="rows__name">{o.nom}</span><span class="rows__value">{o.prix === null ? <span class="a-completer">{PRIX_A_COMPLETER}</span> : euros(o.prix)}</span></li>
+    {options.filter((o) => o.prix !== null).map((o) => (
+      <li><span class="rows__name">{o.nom}</span><span class="rows__value">{euros(o.prix!)}</span></li>
     ))}
   </ul>
 

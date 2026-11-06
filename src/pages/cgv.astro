@@ -1,13 +1,19 @@
 ---
-// Conditions générales de vente — STRUCTURE À COMPLÉTER ET À FAIRE RELIRE.
+// Conditions générales de vente (B2B). Version mise en ligne le 6 novembre 2026.
 // Les montants et délais viennent de src/data/tarifs.ts ; l'identité de src/data/studio.ts.
-// Tout ce qui est entre [crochets] est à rédiger : ne rien publier sans relecture.
+// Si tu modifies une clause, change aussi DATE_APPLICATION.
 import PageSimple from '../layouts/PageSimple.astro';
 import { studio } from '../data/studio';
 import Telephone from '../components/Telephone.astro';
-import { maintenance } from '../data/tarifs';
+import Email from '../components/Email.astro';
+import { maintenance, OFFRE_LANCEMENT, formules, euros } from '../data/tarifs';
 const { legal } = studio;
-const A = (texte = 'À COMPLÉTER') => `[${texte}]`;
+
+const DATE_APPLICATION = '6 novembre 2026';
+const remise = Math.round(OFFRE_LANCEMENT.remise * 100);
+const nomsFormules = formules.map((f) => f.nom);
+const listeFormules = `${nomsFormules.slice(0, -1).join(', ')} et ${nomsFormules.at(-1)}`;
+const horsForfait = euros(30);
 ---
 
 <PageSimple
@@ -15,93 +21,203 @@ const A = (texte = 'À COMPLÉTER') => `[${texte}]`;
   h1="Conditions générales de vente"
   description="Conditions générales de vente de Pyke Studio : création de sites web à distance pour les professionnels."
 >
-  <p class="avertissement">À faire relire avant publication. Ce document est une structure : chaque partie entre crochets doit être rédigée et validée.</p>
+  <p>
+    <strong>Les prestations de Pyke Studio sont réservées aux professionnels (commerçants, artisans, indépendants).</strong>
+  </p>
 
   <p>
-    Conditions applicables à compter du <span class="a-completer">{A('DATE À COMPLÉTER')}</span>.<br />
-    Prestataire : <strong>{studio.nom}</strong>, {legal.responsable}, {legal.statut}, SIRET {legal.siret}, {legal.adresse}.<br />
-    Contact : <a href={`mailto:${studio.email}`}>{studio.email}</a>, <Telephone />.
+    Conditions applicables à compter du {DATE_APPLICATION}.
   </p>
+  <p>
+    Prestataire : <strong>{legal.responsableEI}</strong><br />
+    Nom commercial : {studio.nom} · {legal.statut}<br />
+    SIREN : {legal.siren} · SIRET : {legal.siret} · Code NAF : {legal.naf}<br />
+    Adresse : {legal.adresse}<br />
+    {studio.telephone && <>Téléphone : <Telephone /><br /></>}
+    E-mail : <Email /><br />
+    {legal.tva}
+  </p>
+  <p>Dans les présentes conditions, « Pyke Studio » désigne le prestataire ci-dessus et « le client » le professionnel qui commande une prestation.</p>
 
   <h2>1. Objet</h2>
   <p>
-    Les présentes conditions encadrent la création de sites web et les prestations associées réalisées
-    entièrement à distance par {studio.nom} pour des clients professionnels (B2B).
-    <span class="a-completer">{A('À COMPLÉTER : liste des prestations couvertes')}</span>
+    Les présentes conditions encadrent les prestations réalisées par {studio.nom} : création de sites
+    vitrines et de boutiques en ligne (e-commerce), rédaction de textes, options listées sur la page
+    <a href="/tarifs">Tarifs</a> et maintenance mensuelle. Les prestations sont réalisées entièrement à
+    distance (téléphone, visio, e-mail), pour des clients professionnels.
   </p>
 
   <h2>2. Devis et commande</h2>
   <p>
-    Chaque prestation fait l’objet d’un devis gratuit. La commande est ferme à la réception du devis
-    signé et de l’acompte.
-    <span class="a-completer">{A('À COMPLÉTER : durée de validité du devis, modalités de signature')}</span>
+    Chaque prestation fait l’objet d’un devis gratuit, valable 30 jours à compter de son envoi. La
+    commande est ferme à la réception par {studio.nom}, d’une part, du devis signé — par signature
+    électronique, ou avec la mention « Bon pour accord », la date et la signature du client, renvoyé
+    par e-mail — et, d’autre part, de l’acompte, sous réserve de l’article 14 « Contrats conclus hors
+    établissement ». La signature du devis vaut acceptation des présentes conditions.
   </p>
 
   <h2>3. Prix</h2>
   <p>
-    Les prix sont indiqués en euros, nets : {legal.tva}.
-    <span class="a-completer">{A('À COMPLÉTER : prix applicables, révision des tarifs, offre de lancement')}</span>
+    Les prix sont indiqués en euros, nets : {legal.tva}. Les prix applicables sont ceux du devis signé.
+  </p>
+  <p>
+    Offre de lancement : -{remise} % sur les formules {listeFormules} pour les {OFFRE_LANCEMENT.places}
+    premiers contrats signés, non cumulable avec une autre remise. Les tarifs de {studio.nom} peuvent
+    évoluer ; les nouveaux tarifs ne s’appliquent pas aux devis déjà signés.
   </p>
 
   <h2>4. Paiement</h2>
   <p>
-    Un acompte de 40 % est dû à la signature du devis. Le solde est dû à la mise en ligne du site.
-    <span class="a-completer">{A('À COMPLÉTER : moyens de paiement acceptés, délai de paiement')}</span>
+    Un acompte de 40 % du prix est dû à la commande, le solde à la mise en ligne du site. Les
+    paiements se font par virement bancaire. Les factures sont payables à réception. Aucun escompte
+    n’est accordé en cas de paiement anticipé.
+  </p>
+  <p>
+    La maintenance est payable mensuellement, d’avance, par virement ou prélèvement.
   </p>
 
   <h2>5. Délais</h2>
   <p>
-    Le site est mis en ligne sous 7 à 10 jours après réception de l’ensemble des contenus fournis par
-    le client.
-    <span class="a-completer">{A('À COMPLÉTER : conséquences d’un retard de transmission des contenus')}</span>
+    Le site est mis en ligne sous 7 à 10 jours ouvrés après réception de l’ensemble des contenus
+    fournis par le client et validation de la maquette. Tout retard du client dans la transmission
+    des contenus ou dans la validation décale d’autant ce délai.
+  </p>
+  <p>
+    Si les contenus ne sont pas reçus dans les 60 jours suivant la commande, {studio.nom} peut
+    facturer le travail déjà réalisé ; l’acompte reste alors acquis à hauteur de ce travail.
   </p>
 
   <h2>6. Contenus fournis par le client</h2>
   <p>
-    Le client fournit les textes, photos, logos et informations nécessaires à son site. Il garantit en
-    détenir les droits et reste seul responsable de leur contenu.
-    <span class="a-completer">{A('À COMPLÉTER : formats attendus, garantie et responsabilité du client')}</span>
+    Le client fournit les textes, photos, logos et informations nécessaires à son site, dans les
+    formats suivants : textes par e-mail ou dans un document ; images en JPG, PNG ou WebP, dans la
+    meilleure qualité disponible ; logo de préférence en SVG ou en PNG à fond transparent.
+  </p>
+  <p>
+    Le client garantit détenir tous les droits sur les éléments qu’il fournit et reste seul
+    responsable de leur contenu. Il garantit {studio.nom} contre toute réclamation de tiers à ce sujet.
   </p>
 
   <h2>7. Corrections</h2>
   <p>
-    Deux séries de corrections sont incluses dans chaque formule.
-    <span class="a-completer">{A('À COMPLÉTER : définition d’une série, tarif des corrections supplémentaires')}</span>
+    Deux séries de corrections sont incluses dans chaque formule. Une série est une liste unique de
+    modifications, envoyée en une seule fois, sur la maquette ou sur le site en préproduction.
+  </p>
+  <p>
+    Au-delà, les corrections sont facturées {horsForfait} par tranche de 30 minutes. Les changements de
+    structure et les pages ajoutées après validation sont facturés selon la page <a href="/tarifs">Tarifs</a>.
   </p>
 
   <h2>8. Propriété intellectuelle et cession des droits</h2>
   <p>
-    <span class="a-completer">{A('À COMPLÉTER : droits cédés au client après paiement complet (étendue, durée, territoire), éléments conservés par le prestataire, mention « Site réalisé par Pyke Studio », utilisation en référence')}</span>
+    Après paiement intégral du prix, {studio.nom} cède au client, à titre exclusif, les droits de
+    reproduction, de représentation, d’adaptation et de modification sur les éléments graphiques et
+    les textes créés spécifiquement pour lui. Cette cession vaut pour une exploitation sur internet
+    et sur tout support de communication du client, pour le monde entier et pour toute la durée
+    légale des droits d’auteur (article L131-3 du Code de la propriété intellectuelle).
+  </p>
+  <p>
+    {studio.nom} conserve la propriété de ses outils, composants génériques et code réutilisable. Il
+    accorde au client, pour son site, une licence d’utilisation non exclusive et gratuite sur ces
+    éléments.
+  </p>
+  <p>Tant que le prix n’est pas entièrement payé, aucun droit n’est cédé.</p>
+  <p>
+    Sauf refus écrit du client, {studio.nom} peut ajouter un lien discret « Site réalisé par Pyke
+    Studio » dans le pied de page du site et présenter le site dans son portfolio.
   </p>
 
   <h2>9. Nom de domaine</h2>
   <p>
-    <span class="a-completer">{A('À COMPLÉTER : au nom de qui le nom de domaine est enregistré, transfert au client en fin de contrat')}</span>
+    Le nom de domaine est enregistré au nom du client, qui en est le titulaire, auprès du bureau
+    d’enregistrement OVHcloud. {studio.nom} en assure la gestion technique pendant la durée de la
+    maintenance. En fin de contrat, {studio.nom} fournit sur simple demande le code de transfert
+    (code AUTH) du nom de domaine.
   </p>
 
   <h2>10. Maintenance</h2>
   <p>
-    La maintenance est proposée à {maintenance.prixMois} € par mois, avec un {maintenance.engagement}.
-    Elle comprend l’hébergement, le nom de domaine, les mises à jour, les sauvegardes et 30 minutes de
+    La maintenance est proposée à {maintenance.prixMois} € par mois. Elle comprend l’hébergement du
+    site (Cloudflare Pages), le nom de domaine, les mises à jour, les sauvegardes et 30 minutes de
     modifications par mois.
-    <span class="a-completer">{A('À COMPLÉTER : reconduction, résiliation et préavis, ce qui se passe à la fin du contrat (récupération du site et du nom de domaine)')}</span>
+  </p>
+  <p>
+    Elle est souscrite pour un engagement initial de 12 mois à compter de la mise en ligne. Elle se
+    poursuit ensuite par reconduction tacite de mois en mois et peut être résiliée à tout moment,
+    par e-mail, avec un préavis d’un mois.
+  </p>
+  <p>
+    En cas de résiliation, le client reçoit une archive complète de son site (fichiers sources) et le
+    code de transfert de son nom de domaine ; l’hébergement est maintenu jusqu’à la fin du préavis.
+    En cas de résiliation anticipée pendant les 12 premiers mois, les mensualités restantes jusqu’à
+    la fin de l’engagement restent dues.
   </p>
 
   <h2>11. Retard de paiement</h2>
   <p>
-    Tout retard de paiement entraîne des pénalités de retard ainsi qu’une indemnité forfaitaire de 40 €
-    pour frais de recouvrement (article L441-10 du Code de commerce).
-    <span class="a-completer">{A('À COMPLÉTER : taux des pénalités de retard')}</span>
+    Conformément à l’article L441-10 du Code de commerce, tout retard de paiement entraîne de plein
+    droit des pénalités de retard au taux de trois fois le taux d’intérêt légal, exigibles dès le
+    lendemain de la date d’échéance sans qu’un rappel soit nécessaire, ainsi qu’une indemnité
+    forfaitaire de 40 € pour frais de recouvrement.
+  </p>
+  <p>
+    Après une mise en demeure restée sans effet pendant 15 jours, {studio.nom} peut suspendre la
+    maintenance et la mise en ligne du site.
   </p>
 
   <h2>12. Responsabilité</h2>
   <p>
-    <span class="a-completer">{A('À COMPLÉTER : obligation de moyens, limites de responsabilité, disponibilité de l’hébergement, force majeure')}</span>
+    {studio.nom} est tenu à une obligation de moyens. Il n’est pas responsable des contenus fournis
+    par le client, des interruptions de l’hébergeur ou des services tiers (Google, Cloudflare, bureau
+    d’enregistrement du nom de domaine), ni des pertes indirectes subies par le client (perte de
+    chiffre d’affaires, de clientèle…).
+  </p>
+  <p>
+    La responsabilité totale de {studio.nom} est limitée au montant payé par le client au titre du
+    contrat concerné.
+  </p>
+  <p>
+    Aucune des parties n’est responsable d’un manquement causé par un cas de force majeure, au sens
+    de l’article 1218 du Code civil : un événement échappant à son contrôle, qui ne pouvait pas être
+    raisonnablement prévu lors de la conclusion du contrat et dont les effets ne peuvent pas être
+    évités par des mesures appropriées.
   </p>
 
   <h2>13. Droit applicable et litiges</h2>
   <p>
-    Les présentes conditions sont soumises au droit français.
-    <span class="a-completer">{A('À COMPLÉTER : règlement amiable, tribunal compétent')}</span>
+    Les présentes conditions sont soumises au droit français. En cas de litige, les parties
+    recherchent d’abord une solution amiable pendant 30 jours à compter d’une réclamation écrite. À
+    défaut d’accord, le tribunal compétent est désigné selon les règles de droit commun.
+  </p>
+
+  <h2 id="hors-etablissement">14. Contrats conclus hors établissement</h2>
+  <p>
+    Lorsque le contrat est signé hors des locaux de {studio.nom} (par exemple dans le commerce du
+    client) avec un professionnel qui emploie 5 salariés ou moins, et que le site internet n’entre
+    pas dans le champ de son activité principale, le client bénéficie des protections suivantes
+    (article L221-3 du Code de la consommation) :
+  </p>
+  <ul>
+    <li>
+      un droit de rétractation de 14 jours à compter de la signature, sans avoir à se justifier, par
+      e-mail à <Email /> ou à l’aide du <a href="/retractation">formulaire de rétractation</a> joint
+      au devis ;
+    </li>
+    <li>
+      {studio.nom} ne peut recevoir aucun paiement, y compris l’acompte, avant l’expiration d’un délai
+      de 7 jours à compter de la signature ;
+    </li>
+    <li>
+      si le client demande expressément que le travail commence pendant le délai de rétractation,
+      puis se rétracte, il paie le travail déjà réalisé jusqu’à sa rétractation, au prorata du prix
+      total.
+    </li>
+  </ul>
+
+  <h2>15. Données personnelles</h2>
+  <p>
+    Le traitement des données personnelles est décrit dans la rubrique
+    <a href="/mentions-legales#donnees">Données personnelles</a> des mentions légales. Les données des
+    clients (coordonnées, factures) sont conservées 10 ans pour respecter les obligations comptables.
   </p>
 </PageSimple>

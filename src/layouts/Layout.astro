@@ -7,6 +7,7 @@ import '@fontsource/ibm-plex-mono/latin-400.css';
 import '../styles/site.css';
 import Logo from '../components/Logo.astro';
 import Telephone from '../components/Telephone.astro';
+import Email from '../components/Email.astro';
 import { studio } from '../data/studio';
 
 interface Props {
@@ -126,7 +127,7 @@ const jsonLd = {
           </div>
           <div>
             <p class="label">Contact</p>
-            <a href={`mailto:${studio.email}`}>E-mail</a>
+            <Email />
             <a href={studio.instagram} rel="noopener">Instagram</a>
             <a href={studio.tiktok} rel="noopener">TikTok</a>
             <Telephone />
@@ -134,14 +135,16 @@ const jsonLd = {
           <div>
             <p class="label">Légal</p>
             <a href="/mentions-legales">Mentions légales</a>
-            <a href="/cgv">Conditions générales de vente</a>
+            <a href="/mentions-legales#donnees">Données personnelles</a>
+            <a href="/cgv">CGV</a>
+            <a href="/retractation">Rétractation</a>
           </div>
         </div>
 
         <p class="pied__nom" aria-hidden="true">Pyke Studio</p>
 
         <div class="pied__legal mono discret">
-          <span>© {annee} {studio.nom} · {studio.legal.tva}</span>
+          <span>© {annee} {studio.nom} — {studio.legal.responsableCourt} · {studio.legal.tva}</span>
           <span>{studio.slogan}, partout en France, à distance.</span>
         </div>
       </div>

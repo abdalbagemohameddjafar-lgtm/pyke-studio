@@ -27,13 +27,13 @@ const cle = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
     <label>Ne pas cocher : <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" /></label>
   </p>
 
-  <label class="champ"><span class="label">Votre nom</span>
+  <label class="champ"><span class="label">Votre nom<span class="obligatoire" aria-hidden="true"> *</span></span>
     <input id="devis-nom" name="nom" type="text" autocomplete="name" required />
   </label>
   <label class="champ"><span class="label">Nom du commerce et ville (facultatif)</span>
     <input name="commerce" type="text" autocomplete="organization" />
   </label>
-  <label class="champ"><span class="label">E-mail</span>
+  <label class="champ"><span class="label">E-mail<span class="obligatoire" aria-hidden="true"> *</span></span>
     <input name="email" type="email" autocomplete="email" required />
   </label>
   <label class="champ"><span class="label">Téléphone (facultatif)</span>
@@ -46,7 +46,7 @@ const cle = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
       <option value={boutique.nom}>{boutique.nom}</option>
     </select>
   </label>
-  <label class="champ plein"><span class="label">Votre projet</span>
+  <label class="champ plein"><span class="label">Votre projet<span class="obligatoire" aria-hidden="true"> *</span></span>
     <textarea name="message" rows="4" required></textarea>
   </label>
 
@@ -54,8 +54,9 @@ const cle = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
     <button class="bouton" type="submit">Demander un devis <span class="fleche" aria-hidden="true">→</span></button>
   </div>
   <p class="plein mono discret">
-    Vos informations servent uniquement à vous répondre
-    (<a class="lien" href="/mentions-legales#donnees">mentions légales</a>).
+    * Champs obligatoires. Vos données servent uniquement à répondre à votre demande et sont
+    conservées 3 ans. Vous pouvez y accéder ou les faire supprimer à tout moment.{" "}
+    <a class="lien" href="/mentions-legales#donnees">En savoir plus</a>
   </p>
   <p class="plein statut" role="status" aria-live="polite"></p>
 </form>
@@ -119,6 +120,9 @@ const cle = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 </script>
 
 <style>
+  .obligatoire {
+    color: var(--accent);
+  }
   .statut:empty,
   .piege {
     display: none;

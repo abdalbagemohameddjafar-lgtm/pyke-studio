@@ -1,0 +1,117 @@
+---
+// Formulaire type de rétractation (modèle de l'annexe à l'article R221-1 du Code de la consommation),
+// pour les contrats conclus hors établissement (CGV, article 14). Version imprimable.
+import PageSimple from '../layouts/PageSimple.astro';
+import { studio } from '../data/studio';
+import Email from '../components/Email.astro';
+const { legal } = studio;
+---
+
+<PageSimple
+  titre="Formulaire de rétractation · Pyke Studio"
+  h1="Formulaire de rétractation"
+  description="Formulaire type de rétractation pour les contrats conclus hors établissement avec Pyke Studio."
+>
+  <p class="ecran-seul">
+    Ce formulaire concerne uniquement les contrats signés hors des locaux de {studio.nom}, dans les
+    conditions de l’<a href="/cgv#hors-etablissement">article 14 des CGV</a>. Vous disposez de 14 jours
+    à compter de la signature pour vous rétracter. Vous pouvez aussi simplement écrire à <Email />.
+  </p>
+  <p class="ecran-seul">
+    <button class="bouton" type="button" id="imprimer">Imprimer le formulaire</button>
+  </p>
+
+  <div class="formulaire-type">
+    <h2>Formulaire de rétractation</h2>
+    <p>
+      <em>(Veuillez compléter et renvoyer le présent formulaire uniquement si vous souhaitez vous
+      rétracter du contrat.)</em>
+    </p>
+    <p>
+      À l’attention de {legal.responsableEI}, {studio.nom},<br />
+      {legal.adresse}<br />
+      E-mail : <Email />
+    </p>
+    <p>
+      Je/nous (*) vous notifie/notifions (*) par la présente ma/notre (*) rétractation du contrat
+      pour la prestation de services ci-dessous :
+    </p>
+    <dl class="champs-type">
+      <dt>Prestation concernée (numéro et date du devis) :</dt><dd></dd>
+      <dt>Commandé le :</dt><dd></dd>
+      <dt>Nom du (des) client(s) :</dt><dd></dd>
+      <dt>Adresse du (des) client(s) :</dt><dd></dd>
+      <dt>Signature du (des) client(s) (uniquement en cas de notification du présent formulaire sur papier) :</dt><dd class="haut"></dd>
+      <dt>Date :</dt><dd></dd>
+    </dl>
+    <p><small>(*) Rayez la mention inutile.</small></p>
+  </div>
+</PageSimple>
+
+<script>
+  document.getElementById('imprimer')?.addEventListener('click', () => window.print());
+</script>
+
+<style>
+  .formulaire-type {
+    margin-top: 40px;
+    padding: 28px;
+    border: 1px solid var(--filet);
+  }
+  .formulaire-type h2 {
+    margin-top: 0;
+  }
+  .champs-type dt {
+    margin-top: 18px;
+  }
+  .champs-type dd {
+    margin: 0;
+    min-height: 2em;
+    border-bottom: 1px dotted currentColor;
+  }
+  .champs-type dd.haut {
+    min-height: 5em;
+  }
+  @media print {
+    .formulaire-type {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 11pt;
+    }
+    .champs-type dt {
+      margin-top: 10px;
+    }
+    .champs-type dd {
+      min-height: 1.8em;
+    }
+    .champs-type dd.haut {
+      min-height: 4em;
+    }
+  }
+</style>
+
+<style is:global>
+  @media print {
+    .entete,
+    .pied,
+    .lignes,
+    .evitement,
+    .ecran-seul {
+      display: none !important;
+    }
+    body {
+      background: #fff;
+      color: #000;
+    }
+    .page-texte {
+      padding: 0 !important;
+    }
+    .page-texte h1 {
+      display: none;
+    }
+    @page {
+      margin: 18mm;
+    }
+  }
+</style>

@@ -1,7 +1,10 @@
 ---
+// Mentions légales (LCEN art. 6-III, Code de commerce) et politique de données personnelles (RGPD).
+// Identité et coordonnées : src/data/studio.ts.
 import PageSimple from '../layouts/PageSimple.astro';
 import { studio } from '../data/studio';
 import Telephone from '../components/Telephone.astro';
+import Email from '../components/Email.astro';
 const { legal, hebergeur } = studio;
 ---
 
@@ -12,67 +15,79 @@ const { legal, hebergeur } = studio;
 >
   <h2>Éditeur du site</h2>
   <p>
-    <strong>{studio.nom}</strong><br />
-    {legal.responsable}, {legal.statut}<br />
-    SIRET : {legal.siret}<br />
+    <strong>{legal.responsableEI}</strong><br />
+    Nom commercial : {studio.nom}<br />
+    Statut : {legal.statut}<br />
+    SIREN : {legal.siren} · SIRET : {legal.siret}<br />
+    Code NAF : {legal.naf}<br />
     Adresse : {legal.adresse}<br />
-    E-mail : <a href={`mailto:${studio.email}`}>{studio.email}</a><br />
-    Téléphone : <Telephone /><br />
+    {studio.telephone && <>Téléphone : <Telephone /><br /></>}
+    E-mail : <Email /><br />
     {legal.tva}
   </p>
-  <p>Directeur de la publication : {legal.responsable}.</p>
+
+  <h2>Directeur de la publication</h2>
+  <p>{legal.responsable}.</p>
 
   <h2>Hébergement</h2>
   <p>
     {hebergeur.nom}<br />
     {hebergeur.adresse}<br />
-    Téléphone : <span class="a-completer">{hebergeur.telephone}</span><br />
-    <a href={hebergeur.site} target="_blank" rel="noopener">{hebergeur.site}</a>
+    Téléphone : {hebergeur.telephone}<br />
+    <a href={hebergeur.site} target="_blank" rel="noopener">cloudflare.com</a>
   </p>
 
   <h2>Propriété intellectuelle</h2>
   <p>
     L’ensemble du contenu de ce site (textes, logo, mise en page) appartient à {studio.nom}, sauf
     mention contraire. Toute reproduction sans autorisation est interdite. Les sites présentés
-    dans la section « Réalisations » marqués « Projet de démonstration » concernent des commerces
-    fictifs.
+    dans la section « Réalisations » (« Nos sites de démonstration ») sont des projets de
+    démonstration et concernent des commerces fictifs : Maison Ambre, TSUTSU, Morel Plomberie et
+    toute autre réalisation présentée comme projet de démonstration ont été créés par {studio.nom}
+    pour illustrer son travail. Ces commerces n’existent pas.
   </p>
 
   <h2 id="donnees">Données personnelles</h2>
   <p>
     Quand vous utilisez le formulaire de devis, nous recevons votre nom, votre e-mail, la formule
     choisie, votre message et, si vous les indiquez, votre téléphone ainsi que le nom et la ville de
-    votre commerce. Ces informations
-    servent uniquement à répondre à votre demande et à établir un devis.
+    votre commerce. Ces informations servent uniquement à répondre à votre demande et à établir un devis.
   </p>
   <ul>
-    <li><strong>Responsable :</strong> {legal.responsable} ({studio.nom}).</li>
-    <li><strong>Base légale :</strong> votre demande de contact (mesures précontractuelles).</li>
+    <li><strong>Responsable du traitement :</strong> {legal.responsableCourt} ({studio.nom}), {legal.adresse}.</li>
     <li>
-      <strong>Durée de conservation :</strong> 3 ans après notre dernier échange, puis suppression.
+      <strong>Base légale :</strong> l’exécution de mesures précontractuelles prises à votre demande
+      (article 6.1.b du RGPD).
+    </li>
+    <li><strong>Durée de conservation :</strong> 3 ans après notre dernier contact, puis suppression.</li>
+    <li>
+      <strong>Destinataires :</strong> uniquement {studio.nom}. Vos données ne sont jamais vendues ni cédées.
     </li>
     <li>
-      <strong>Destinataires :</strong> uniquement {studio.nom}. Pour des raisons techniques, les
-      messages transitent par le service d’envoi Web3Forms (web3forms.com) et par Google (messagerie
-      Gmail, qui les reçoit). Vos données ne sont jamais vendues ni cédées.
+      <strong>Sous-traitants :</strong> Web3Forms (transmission du formulaire), Google (messagerie
+      Gmail, qui reçoit les demandes) et Cloudflare (hébergement du site).
     </li>
   </ul>
   <p>
-    <strong>Transfert hors de l’Union européenne :</strong> l’hébergeur Cloudflare, Inc., le service
-    d’envoi Web3Forms et Google LLC (Gmail) traitent les messages hors de l’Union européenne, notamment
-    aux États-Unis. Ces transferts sont encadrés par le Data Privacy Framework UE–États-Unis (décision
-    d’adéquation de la Commission européenne du 10 juillet 2023).
-    <span class="a-completer">[À VÉRIFIER : pays de Web3Forms et adhésion de Cloudflare, Web3Forms et Google au Data Privacy Framework, sur dataprivacyframework.gov]</span>
+    <strong>Transferts hors de l’Union européenne :</strong> certaines données peuvent être traitées
+    hors de l’Union européenne par ces prestataires, dans le cadre des garanties prévues par le RGPD
+    (Data Privacy Framework ou clauses contractuelles types de la Commission européenne).
   </p>
   <p>
-    Vous pouvez demander à consulter, corriger ou supprimer vos données à tout moment en écrivant à{" "}
-    <a href={`mailto:${studio.email}`}>{studio.email}</a>. Vous pouvez aussi adresser une réclamation à{" "}
-    la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).
+    <strong>Vos droits :</strong> vous pouvez demander l’accès à vos données, leur rectification, leur
+    effacement, la limitation de leur traitement, vous opposer à ce traitement et demander leur
+    portabilité, en écrivant à <Email />. Nous vous répondons sous 1 mois. Si vous estimez que vos
+    droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL (<a
+      href="https://www.cnil.fr"
+      target="_blank"
+      rel="noopener">cnil.fr</a
+    >).
   </p>
 
   <h2>Cookies</h2>
   <p>
-    Ce site n’utilise aucun cookie publicitaire ni outil de mesure d’audience. Aucun bandeau de
-    consentement n’est donc nécessaire.
+    Ce site n’utilise aucun cookie publicitaire ni outil de mesure d’audience. Seuls des cookies
+    strictement techniques peuvent être déposés par notre hébergeur Cloudflare, pour la sécurité du
+    site. Ces cookies sont exemptés de consentement : aucun bandeau n’est donc nécessaire.
   </p>
 </PageSimple>

@@ -6,20 +6,37 @@ export const validite = 'Valables à partir de novembre 2026';
 // ---------------------------------------------------------------------------
 // OFFRE DE LANCEMENT — la seule chose à changer pour l'activer ou la couper.
 // actif: false → plus aucun prix barré ni mention de l'offre sur le site.
+// placesRestantes : à mettre à jour À LA MAIN à chaque contrat signé (3 → 2 → 1 → 0).
+//   À 0, l'offre disparaît automatiquement du site.
+// dateFin : null = « jusqu'à épuisement des places » ; sinon une date en toutes lettres, ex. '31 janvier 2027'.
 // ---------------------------------------------------------------------------
 export const OFFRE_LANCEMENT = {
   actif: true,
   remise: 0.3, // -30 %
-  places: 3, // pour les 3 premiers clients
+  places: 3, // pour les 3 premiers contrats signés
+  placesRestantes: 3,
+  dateFin: null as string | null,
 };
 
-export const offreLancement = OFFRE_LANCEMENT.actif
-  ? `Offre de lancement : -${Math.round(OFFRE_LANCEMENT.remise * 100)} % pour les ${OFFRE_LANCEMENT.places} premiers clients`
+const offreActive = OFFRE_LANCEMENT.actif && OFFRE_LANCEMENT.placesRestantes > 0;
+const pourcentage = Math.round(OFFRE_LANCEMENT.remise * 100);
+
+/** Conditions complètes de l'offre (pratique commerciale loyale : on dit clairement jusqu'à quand). */
+export const offreLancement = offreActive
+  ? `Offre de lancement : -${pourcentage} % pour les ${OFFRE_LANCEMENT.places} premiers contrats signés, ${
+      OFFRE_LANCEMENT.dateFin ? `jusqu’au ${OFFRE_LANCEMENT.dateFin}` : `jusqu’à épuisement des ${OFFRE_LANCEMENT.places} places`
+    }`
   : '';
+
+/** Compteur affiché à côté de l'offre. */
+export const placesRestantes = offreActive ? `places restantes : ${OFFRE_LANCEMENT.placesRestantes}` : '';
+
+/** Explication du prix barré. */
+export const PRIX_BARRE = 'Tarif standard appliqué après l’offre de lancement';
 
 /** Prix après remise de lancement (arrondi à l'euro), ou null si l'offre est coupée. */
 export const prixRemise = (prix: number) =>
-  OFFRE_LANCEMENT.actif ? Math.round(prix * (1 - OFFRE_LANCEMENT.remise)) : null;
+  offreActive ? Math.round(prix * (1 - OFFRE_LANCEMENT.remise)) : null;
 
 export type Formule = {
   nom: string;
@@ -95,15 +112,13 @@ export const formules: Formule[] = [
 
 export const boutique = { nom: 'Boutique en ligne', aPartirDe: 1500 };
 
-// prix: null → affiche « [PRIX À COMPLÉTER] »
+// Chaque option doit avoir un prix : une option sans prix n'est pas affichée.
 export const options: { nom: string; prix: number | null }[] = [
   { nom: 'Page supplémentaire', prix: 80 },
   { nom: 'Rédaction des textes', prix: 120 },
   { nom: 'Version anglaise', prix: 200 },
-  { nom: 'Sélection et retouche de vos photos', prix: null },
   { nom: 'Modification hors forfait (30 min)', prix: 30 },
 ];
-export const PRIX_A_COMPLETER = '[PRIX À COMPLÉTER]';
 
 export const maintenance = {
   prixMois: 29,

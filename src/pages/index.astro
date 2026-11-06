@@ -4,11 +4,11 @@
 import Layout from '../layouts/Layout.astro';
 import Formulaire from '../components/Formulaire.astro';
 import Telephone from '../components/Telephone.astro';
-import { studio } from '../data/studio';
+import Email from '../components/Email.astro';
 import RealisationsList from '../components/RealisationsList.astro';
 import FeaturedDemo from '../components/FeaturedDemo.astro';
 import FormuleExemple from '../components/FormuleExemple.astro';
-import { formules, boutique, maintenance, offreLancement, prixRemise, euros } from '../data/tarifs';
+import { formules, boutique, maintenance, offreLancement, placesRestantes, prixRemise, euros } from '../data/tarifs';
 
 const metiers = [
   { nom: 'Fleuristes', texte: 'Vos compositions en photos, vos horaires et la commande par téléphone.', formule: 'Vitrine' },
@@ -26,7 +26,7 @@ const etapes = [
 const questions = [
   {
     q: 'Je n’ai ni textes ni photos, c’est un problème ?',
-    r: 'Non. Nous rédigeons vos textes (120 €) et nous vous envoyons un guide simple pour prendre de bonnes photos avec votre téléphone. Nous les retouchons ensuite pour le site.',
+    r: 'Non. Nous rédigeons vos textes (120 €) et nous vous envoyons un guide simple pour prendre de bonnes photos avec votre téléphone.',
   },
   {
     q: 'Le nom de domaine et l’hébergement sont compris ?',
@@ -35,6 +35,10 @@ const questions = [
   { q: 'Je pourrai changer mes horaires ou mes prix ?', r: 'Oui. Envoyez-nous un message : 30 minutes de modifications par mois sont comprises dans la maintenance.' },
   { q: 'Vous travaillez dans quelle ville ?', r: 'Partout en France. Tout se fait à distance, par téléphone, visio ou e-mail.' },
   { q: 'Faut-il ajouter la TVA ?', r: 'Non. Pyke Studio est une micro-entreprise, TVA non applicable : vous payez le prix affiché.' },
+  {
+    q: 'Vous travaillez aussi pour les particuliers ?',
+    r: 'Non. Les prestations de Pyke Studio sont réservées aux professionnels (commerçants, artisans, indépendants).',
+  },
 ];
 
 const deux = (n: number) => String(n).padStart(2, '0');
@@ -69,7 +73,7 @@ const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'n
       <div class="hero__haut">
         <p class="label">Studio web · Partout en France</p>
         <p class="label hero__edition">N° 01 — <span class="edition-mois">{edition}</span></p>
-        {offreLancement && <p class="label accent">{offreLancement}</p>}
+        {offreLancement && <p class="label accent">{offreLancement} · {placesRestantes}</p>}
       </div>
       <div class="grille">
         <h1 id="hero-h" data-reveal>Sites web pour artisans et commerçants</h1>
@@ -156,7 +160,7 @@ const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'n
       <div class="section__tete">
         <p class="section__num label">04 — Formules</p>
         <h2 id="formules-h" data-reveal>Formules et prix</h2>
-        <p class="chapo">Prix nets, TVA non applicable.</p>
+        <p class="chapo">Prix nets, TVA non applicable. Les prestations de Pyke Studio sont réservées aux professionnels (commerçants, artisans, indépendants).</p>
       </div>
       <div class="formules">
         {formules.map((f, i) => {
@@ -171,7 +175,7 @@ const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'n
               {remise !== null ? (
                 <div class="prix-ligne">
                   <p class="prix"><span class="cache">Prix de lancement : </span>{montant(remise)}<small>€</small></p>
-                  <p class="prix-avant mono"><span class="cache">au lieu de </span><s>{euros(f.prix)}</s></p>
+                  <p class="prix-avant mono"><span class="cache">tarif standard après l’offre : </span><s>{euros(f.prix)}</s></p>
                 </div>
               ) : (
                 <p class="prix">{montant(f.prix)}<small>€</small></p>
@@ -201,7 +205,7 @@ const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'n
       </div>
       <div class="offres-plus">
         <p>
-          {offreLancement && <>{offreLancement} (prix barré = prix normal). </>}
+          {offreLancement && <>{offreLancement} ({placesRestantes}). Prix barrés : tarif standard appliqué après l’offre de lancement. </>}
           {boutique.nom} sur devis, dès {euros(boutique.aPartirDe)}. Maintenance {maintenance.prixMois} € par mois avec {maintenance.engagement} : hébergement, nom de domaine et modifications.
         </p>
         <a class="lien" href="/tarifs">Voir tous les tarifs <span class="fleche" aria-hidden="true">→</span></a>
@@ -246,7 +250,7 @@ const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'n
           <h2 id="devis-h" data-reveal>Demander un devis</h2>
           <p class="chapo">Décrivez votre commerce en quelques lignes. Le devis est gratuit, la réponse arrive sous 48&nbsp;h.</p>
           <ul class="contacts" role="list">
-            <li><span class="label">E-mail</span><a class="lien" href={`mailto:${studio.email}`}>{studio.email}</a></li>
+            <li><span class="label">E-mail</span><Email class="lien" /></li>
             <li><span class="label">Téléphone</span><Telephone /></li>
           </ul>
         </div>
