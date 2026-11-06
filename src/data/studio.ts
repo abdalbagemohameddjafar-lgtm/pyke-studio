@@ -21,8 +21,7 @@ export const studio = {
   tiktok: 'https://www.tiktok.com/@pyke.studio',
   url: 'https://pykestudio.fr',
 
-  // Présentation du fondateur (prête à l'emploi ; la section n'est pas affichée sur l'accueil
-  // depuis que tu l'as retirée le 2026-11-05).
+  // Section « 06 — Le studio » de l'accueil.
   // photo : chemin d'une image dans public/ (ex. '/assets/img/portrait.webp'), ou null = pas d'emplacement photo.
   fondateur: {
     prenom: 'Djafar',
@@ -30,8 +29,8 @@ export const studio = {
     photo: null as string | null,
     presentation: [
       'Je m’appelle Djafar, je suis étudiant en informatique à Metz.',
-      'Je crée des sites pour les petits commerces : des sites clairs, rapides et faciles à trouver.',
-      'Tout se fait à distance, avec un seul interlocuteur du premier échange à la mise en ligne.',
+      'Je crée des sites simples et efficaces pour les commerçants et artisans, qui n’ont pas le temps de s’en occuper.',
+      'Vous avez un seul interlocuteur, du premier échange à la mise en ligne.',
     ],
   },
 

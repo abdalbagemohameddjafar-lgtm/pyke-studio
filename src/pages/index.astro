@@ -5,10 +5,13 @@ import Layout from '../layouts/Layout.astro';
 import Formulaire from '../components/Formulaire.astro';
 import Telephone from '../components/Telephone.astro';
 import Email from '../components/Email.astro';
+import { studio } from '../data/studio';
 import RealisationsList from '../components/RealisationsList.astro';
 import FeaturedDemo from '../components/FeaturedDemo.astro';
 import FormuleExemple from '../components/FormuleExemple.astro';
 import { formules, boutique, maintenance, offreLancement, placesRestantes, prixRemise, euros } from '../data/tarifs';
+
+const { fondateur } = studio;
 
 const metiers = [
   { nom: 'Fleuristes', texte: 'Vos compositions en photos, vos horaires et la commande par téléphone.', formule: 'Vitrine' },
@@ -20,7 +23,7 @@ const metiers = [
 const etapes = [
   { titre: 'Décrire votre commerce', texte: 'Un premier échange gratuit, puis un devis au prix affiché. 40 % d’acompte à la signature.' },
   { titre: 'Valider la maquette', texte: 'Vous relisez votre site avant sa sortie. Deux séries de corrections sont incluses.' },
-  { titre: 'Mettre le site en ligne', texte: 'Le solde est réglé à la mise en ligne. Ensuite, la maintenance s’occupe du reste.' },
+  { titre: 'Mettre le site en ligne', texte: 'Le solde (60 %) est réglé à la validation finale du site, présenté sur une adresse de prévisualisation, avant sa mise en ligne sur votre nom de domaine. Ensuite, la maintenance s’occupe du reste.' },
 ];
 
 const questions = [
@@ -35,6 +38,10 @@ const questions = [
   { q: 'Je pourrai changer mes horaires ou mes prix ?', r: 'Oui. Envoyez-nous un message : 30 minutes de modifications par mois sont comprises dans la maintenance.' },
   { q: 'Vous travaillez dans quelle ville ?', r: 'Partout en France. Tout se fait à distance, par téléphone, visio ou e-mail.' },
   { q: 'Faut-il ajouter la TVA ?', r: 'Non. Pyke Studio est une micro-entreprise, TVA non applicable : vous payez le prix affiché.' },
+  {
+    q: 'Comment se passe le paiement ?',
+    r: '40 % d’acompte à la commande, par virement bancaire. Le solde (60 %) est réglé à la validation finale du site, présenté sur une adresse de prévisualisation, avant sa mise en ligne sur votre nom de domaine.',
+  },
   {
     q: 'Vous travaillez aussi pour les particuliers ?',
     r: 'Non. Les prestations de Pyke Studio sont réservées aux professionnels (commerçants, artisans, indépendants).',
@@ -237,16 +244,38 @@ const edition = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'n
     </div>
   </section>
 
-  <!-- 06 · DEVIS -->
+  <!-- 06 · LE STUDIO (textes : src/data/studio.ts → fondateur) -->
+  <section class="section" id="apropos" aria-labelledby="apropos-h">
+    <span class="deco deco--folio" aria-hidden="true">06</span>
+    <span class="forme forme--arche c-sauge f-apropos-arche" aria-hidden="true"></span>
+    <div class="wrap">
+      <div class:list={['grille', 'apropos', { 'apropos--sans-photo': !fondateur.photo }]}>
+        {fondateur.photo && (
+          <div class="apropos__photo">
+            <img src={fondateur.photo} alt={`Portrait de ${fondateur.prenom}`} width="800" height="1000" loading="lazy" />
+          </div>
+        )}
+        <div class="apropos__texte">
+          <p class="label">06 — Le studio</p>
+          <h2 id="apropos-h" data-reveal>Qui est derrière Pyke Studio</h2>
+          <p class="apropos__prenom serif">{fondateur.prenom}</p>
+          {fondateur.presentation.map((p) => <p class="discret">{p}</p>)}
+          <p class="label">Basé à {fondateur.ville}, clients partout en France</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 · DEVIS -->
   <section class="section" id="devis" aria-labelledby="devis-h">
-    <span class="deco deco--folio deco--folio-bas" aria-hidden="true">06</span>
+    <span class="deco deco--folio deco--folio-bas" aria-hidden="true">07</span>
     <span class="forme forme--rond c-ardoise f-devis-rond anim-flotte" aria-hidden="true"></span>
     <span class="deco deco--mire deco--mire-gauche" aria-hidden="true"></span>
     <span class="deco deco--nuancier" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     <div class="wrap">
       <div class="grille">
         <div class="devis-texte">
-          <p class="label">06 — Devis</p>
+          <p class="label">07 — Devis</p>
           <h2 id="devis-h" data-reveal>Demander un devis</h2>
           <p class="chapo">Décrivez votre commerce en quelques lignes. Le devis est gratuit, la réponse arrive sous 48&nbsp;h.</p>
           <ul class="contacts" role="list">

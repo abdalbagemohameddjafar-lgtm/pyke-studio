@@ -123,9 +123,16 @@ const cle = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
   .obligatoire {
     color: var(--accent);
   }
-  .statut:empty,
-  .piege {
+  .statut:empty {
     display: none;
+  }
+  /* Piège à robots : présent dans la page mais hors écran, invisible pour tout le monde */
+  .piege {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
   .statut {
     font-weight: 500;

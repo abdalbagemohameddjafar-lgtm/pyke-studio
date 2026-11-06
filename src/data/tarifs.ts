@@ -128,10 +128,13 @@ export const maintenance = {
     'Mises à jour et sauvegardes',
     '30 min de modifications par mois (horaires, photos, prix…)',
   ],
+  facturation: 'Facturée mensuellement, payable d’avance.',
 };
 
 export const conditions = [
-  "40 % d'acompte à la signature, le solde à la mise en ligne",
+  "40 % d'acompte à la commande",
+  'Le solde (60 %) est réglé à la validation finale du site, présenté sur une adresse de prévisualisation, avant sa mise en ligne sur le nom de domaine du client.',
+  'Paiement par virement bancaire',
   '2 séries de corrections incluses',
   'Site en ligne sous 7 à 10 jours après réception de vos contenus',
 ];

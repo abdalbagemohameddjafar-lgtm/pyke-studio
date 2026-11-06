@@ -42,7 +42,7 @@ const horsForfait = euros(30);
   <h2>1. Objet</h2>
   <p>
     Les présentes conditions encadrent les prestations réalisées par {studio.nom} : création de sites
-    vitrines et de boutiques en ligne (e-commerce), rédaction de textes, options listées sur la page
+    vitrines et de boutiques en ligne (e-commerce), rédaction de textes, options listées sur la page{" "}
     <a href="/tarifs">Tarifs</a> et maintenance mensuelle. Les prestations sont réalisées entièrement à
     distance (téléphone, visio, e-mail), pour des clients professionnels.
   </p>
@@ -61,15 +61,16 @@ const horsForfait = euros(30);
     Les prix sont indiqués en euros, nets : {legal.tva}. Les prix applicables sont ceux du devis signé.
   </p>
   <p>
-    Offre de lancement : -{remise} % sur les formules {listeFormules} pour les {OFFRE_LANCEMENT.places}
-    premiers contrats signés, non cumulable avec une autre remise. Les tarifs de {studio.nom} peuvent
+    Offre de lancement : -{remise} % sur les formules {listeFormules} pour les{" "}
+    {OFFRE_LANCEMENT.places} premiers contrats signés, non cumulable avec une autre remise. Les tarifs de {studio.nom} peuvent
     évoluer ; les nouveaux tarifs ne s’appliquent pas aux devis déjà signés.
   </p>
 
   <h2>4. Paiement</h2>
   <p>
-    Un acompte de 40 % du prix est dû à la commande, le solde à la mise en ligne du site. Les
-    paiements se font par virement bancaire. Les factures sont payables à réception. Aucun escompte
+    Un acompte de 40 % du prix est dû à la commande. Le solde (60 %) est réglé à la validation
+    finale du site, présenté sur une adresse de prévisualisation, avant sa mise en ligne sur le nom
+    de domaine du client. Les paiements se font par virement bancaire. Les factures sont payables à réception. Aucun escompte
     n’est accordé en cas de paiement anticipé.
   </p>
   <p>
@@ -142,9 +143,13 @@ const horsForfait = euros(30);
     modifications par mois.
   </p>
   <p>
-    Elle est souscrite pour un engagement initial de 12 mois à compter de la mise en ligne. Elle se
-    poursuit ensuite par reconduction tacite de mois en mois et peut être résiliée à tout moment,
-    par e-mail, avec un préavis d’un mois.
+    Elle est souscrite pour un engagement initial de 12 mois à compter de la mise en ligne. À
+    l’issue des 12 mois d’engagement, elle se poursuit par reconduction tacite de mois en mois et
+    est résiliable à tout moment avec un préavis d’un mois, par e-mail.
+  </p>
+  <p>
+    Les modifications au-delà des 30 minutes mensuelles sont facturées {horsForfait} par tranche de
+    30 minutes.
   </p>
   <p>
     En cas de résiliation, le client reçoit une archive complète de son site (fichiers sources) et le
@@ -214,9 +219,32 @@ const horsForfait = euros(30);
     </li>
   </ul>
 
-  <h2>15. Données personnelles</h2>
+  <h2 id="annulation">15. Annulation par le client</h2>
   <p>
-    Le traitement des données personnelles est décrit dans la rubrique
+    La somme versée à la commande est un acompte et non des arrhes : la commande est ferme. Hors du
+    cas prévu à l’article 14, si le client annule sa commande :
+  </p>
+  <ul>
+    <li>
+      avant le début du travail : l’acompte lui est remboursé sous 14 jours, déduction faite de
+      {" "}{euros(50)} de frais de dossier ;
+    </li>
+    <li>après le début de la maquette : l’acompte reste acquis à {studio.nom}, rien d’autre n’est dû ;</li>
+    <li>après validation de la maquette : 70 % du prix total sont dus ;</li>
+    <li>après validation du site final : 100 % du prix est dû.</li>
+  </ul>
+  <p>
+    Si {studio.nom} ne peut pas réaliser la prestation de son fait, l’acompte est remboursé
+    intégralement sous 14 jours. Tout mois de maintenance commencé est dû.
+  </p>
+  <p>
+    Aucune formule « satisfait ou remboursé » n’est proposée : la satisfaction du client est assurée
+    par la validation de la maquette et les deux séries de corrections incluses (article 7).
+  </p>
+
+  <h2>16. Données personnelles</h2>
+  <p>
+    Le traitement des données personnelles est décrit dans la rubrique{" "}
     <a href="/mentions-legales#donnees">Données personnelles</a> des mentions légales. Les données des
     clients (coordonnées, factures) sont conservées 10 ans pour respecter les obligations comptables.
   </p>

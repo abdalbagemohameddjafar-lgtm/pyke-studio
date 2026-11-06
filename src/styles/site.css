@@ -1086,6 +1086,9 @@ h3 {
   gap: 20px;
   align-content: start;
 }
+.apropos--sans-photo .apropos__texte {
+  grid-column: 1 / span 7;
+}
 .apropos__prenom {
   font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.4rem);
   line-height: 1.1;
@@ -1096,7 +1099,8 @@ h3 {
   .apropos__photo {
     grid-column: 1 / span 9;
   }
-  .apropos__texte {
+  .apropos__texte,
+  .apropos--sans-photo .apropos__texte {
     grid-column: 1 / -1;
   }
 }
